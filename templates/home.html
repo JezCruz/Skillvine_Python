@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Skillvine - Overview{% endblock %}
+
+{% block content %}
+<!-- About Popup -->
+<div id="about-tab" class="tab-popup">
+  <div class="tab-content">
+    <span class="close-tab">&times;</span>
+    <h2>About Skillvine</h2>
+    <p>
+      Skillvine connects students with verified teachers to help them learn
+      new skills online. Our platform is secure, reliable, and fun. We value
+      learning, growth, and building trusted teacher-student relationships.
+    </p>
+  </div>
+</div>
+
+<!-- Services Popup -->
+<div id="services-tab" class="tab-popup">
+  <div class="tab-content">
+    <span class="close-tab">&times;</span>
+    <h2>Our Services</h2>
+    <ul>
+      <li>Verified Teachers for different subjects</li>
+      <li>Coins System to pay securely for sessions</li>
+      <li>Automatic Ratings for teacher credibility</li>
+      <li>Online lessons for kids and adults</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Contact Popup -->
+<div id="contact-tab" class="tab-popup">
+  <div class="tab-content">
+    <span class="close-tab">&times;</span>
+    <h2>Contact Us</h2>
+    <p id="contact-text">
+      For collaborations, support, or inquiries, reach out to us:
+    </p>
+    <ul>
+      <li>Email: <a href="mailto:skillvine.tech@gmail.com">skillvine.tech@gmail.com</a></li>
+      <li>Phone: +63</li>
+      <li>Address: 1850, San Mateo, Rizal, Philippines</li>
+    </ul>
+  </div>
+</div>
+
+<section class="hero">
+  <div class="hero-content">
+    <h1 id="first-h1-styling">Skillvine</h1>
+    <h1 id="h1-font-style">
+      Learn New Skills with Our Trusted Teachers, Let's Grow with Skillvine
+    </h1>
+    <p id="p-font-style">
+      From languages to music to school support, connect with verified
+      educators, gain real skills, and explore exciting opportunities — all
+      in one vibrant learning community.
+    </p>
+    <a href="#features" class="btn hero-btn">Get Started</a>
+  </div>
+</section>
+
+<section class="image-slider">
+  <div class="slider">
+    <div class="slides">
+      <img src="{% static 'images/teaching_online.jpeg' %}" alt="Slide 1" />
+      <img src="{% static 'images/kids_listening.jpeg' %}" alt="Slide 2" />
+      <img src="{% static 'images/female_teaching_guitar.jpeg' %}" alt="Slide 3" />
+      <img src="{% static 'images/male_teaching_guitar.jpeg' %}" alt="Slide 4" />
+      <img src="{% static 'images/female_teaching_fitness.jpeg' %}" alt="Slide 5" />
+      <img src="{% static 'images/male_teaching_fitness.jpeg' %}" alt="Slide 6" />
+      <img src="{% static 'images/female_teaching_piano.jpeg' %}" alt="Slide 7" />
+      <img src="{% static 'images/male_teaching_piano.jpeg' %}" alt="Slide 8" />
+      <img src="{% static 'images/male_teaching_programming.jpeg' %}" alt="Slide 9" />
+      <img src="{% static 'images/teaching(female).jpeg' %}" alt="Slide 10" />
+      <img src="{% static 'images/teacher_1.jpeg' %}" alt="Slide 11" />
+      <img src="{% static 'images/joinnow.jpeg' %}" alt="Slide 12" />
+      <img src="{% static 'images/banner_skillvine.jpeg' %}" alt="Slide 13" />
+    </div>
+    <div class="slider-caption">
+      <h1>Discover the Joy of Learning with Skillvine</h1>
+    </div>
+  </div>
+</section>
+
+<section class="features" id="features">
+  <div class="signup">
+    <a class="text-signup" href="/signup">Sign Up Now</a>
+  </div>
+
+  <h2 class="features-title">Why Choose Skillvine?</h2>
+
+  <div class="feature-container">
+    <div class="feature-card">
+      <h4>✅ Verified Teachers</h4>
+      <p>Learn from experienced teachers who are verified with valid IDs.</p>
+    </div>
+
+    <div class="feature-card">
+      <h4>💰 Coins System</h4>
+      <p>Buy credits and pay for sessions securely within the platform.</p>
+    </div>
+
+    <div class="feature-card">
+      <h4>⭐ Automatic Ratings</h4>
+      <p>Students rate teachers after sessions to build reputation and trust.</p>
+    </div>
+  </div>
+</section>
+{% endblock %}

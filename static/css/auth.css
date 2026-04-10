@@ -1,0 +1,242 @@
+/* =================================
+   Skillvine Auth UI (Login/Signup)
+   Mobile-friendly + aesthetic
+   ================================= */
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+body {
+  color: #0f172a;
+  background: radial-gradient(1100px 600px at 15% 10%, rgba(255,255,255,0.35), transparent 55%),
+              linear-gradient(135deg, #4a90e2, #50e3c2);
+  overflow-x: hidden;
+}
+
+/* Container */
+.auth-container {
+  min-height: 100dvh;      /* better for mobile keyboard */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  gap: 14px;
+}
+
+/* Brand */
+.brand-title {
+  font-size: clamp(34px, 7vw, 56px);
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: rgba(10, 18, 32, 0.95);
+  text-shadow: 0 10px 30px rgba(0,0,0,0.18);
+}
+
+/* Card */
+.auth-box {
+  width: min(420px, 92vw);
+  background: rgba(255, 255, 255, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(12px);
+  border-radius: 18px;
+  padding: 22px 18px;
+  box-shadow: 0 26px 80px rgba(0,0,0,0.22);
+}
+
+/* Header */
+.auth-header h2 {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  margin-bottom: 6px;
+  color: rgba(15, 23, 42, 0.95);
+}
+
+.auth-header p {
+  font-size: 13px;
+  color: rgba(15, 23, 42, 0.72);
+}
+
+.auth-header a {
+  color: #0f172a;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Form */
+.auth-form {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.auth-form input {
+  width: 100%;
+  min-height: 46px;               /* touch-friendly */
+  padding: 12px 12px;
+  font-size: 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  background: rgba(255,255,255,0.85);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.auth-form input:focus {
+  border-color: rgba(15, 23, 42, 0.35);
+  box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.12);
+}
+
+/* Password group */
+.password-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-group input {
+  padding-right: 44px; /* space for eye button */
+}
+
+.toggle-password {
+  position: absolute;
+  right: 8px;
+  height: 34px;
+  width: 36px;
+  border-radius: 10px;
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  background: rgba(255,255,255,0.9);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  font-size: 16px;
+  transition: transform 0.12s ease, background 0.12s ease;
+}
+
+.toggle-password:hover {
+  transform: scale(1.05);
+  background: rgba(255,255,255,1);
+}
+
+/* Error box */
+.error-message {
+  min-height: 18px;
+  font-size: 13px;
+  color: #b91c1c;
+  font-weight: 600;
+}
+
+/* Submit */
+.auth-form button[type="submit"] {
+  min-height: 46px;
+  border: none;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 14px;
+  cursor: pointer;
+
+  background: #0f172a;
+  color: #fff;
+
+  box-shadow: 0 18px 45px rgba(0,0,0,0.22);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.auth-form button[type="submit"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.26);
+  background: #111c35;
+}
+
+.auth-form button[type="submit"]:active {
+  transform: translateY(0px);
+}
+
+/* Super small screens */
+@media (max-width: 380px) {
+  .auth-box {
+    padding: 18px 14px;
+    border-radius: 16px;
+  }
+  .brand-title {
+    font-size: 36px;
+  }
+  .auth-form button[type="submit"] {
+    width: 100%;
+  }
+}
+
+
+/* =========================
+   Signup extras (strength, match, select, messages)
+   ========================= */
+
+/* Select styling */
+.auth-form select {
+  width: 100%;
+  min-height: 46px;
+  padding: 12px 12px;
+  font-size: 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  background: rgba(255,255,255,0.85);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  appearance: none;
+  cursor: pointer;
+}
+
+.auth-form select:focus {
+  border-color: rgba(15, 23, 42, 0.35);
+  box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.12);
+}
+
+/* Small helper messages */
+.password-strength,
+.password-match {
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: -6px;
+  padding-left: 4px;
+}
+
+/* Strength colors (compatible with your JS classes) */
+.password-strength.weak { color: #ef4444; }
+.password-strength.medium { color: #f59e0b; }
+.password-strength.strong { color: #22c55e; }
+
+/* Match message colors (if you set classes in JS) */
+.password-match.ok { color: #16a34a; }
+.password-match.bad { color: #dc2626; }
+
+/* Error / success messages */
+.fade-message,
+.success-message {
+  font-size: 13px;
+  font-weight: 700;
+  margin: 8px 0 0 0;
+  min-height: 18px;
+}
+
+/* If you want consistent colors */
+.fade-message { color: #b91c1c; }
+.success-message { color: #16a34a; }
+
+/* Slightly tighter spacing on mobile */
+@media (max-width: 380px) {
+  .password-strength,
+  .password-match,
+  .fade-message,
+  .success-message {
+    font-size: 12px;
+  }
+}
+

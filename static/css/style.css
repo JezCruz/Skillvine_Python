@@ -1,0 +1,672 @@
+#contact-text {
+  font-size: 16px;
+  color: #790000;
+  margin-bottom: 15px;
+}
+
+/* ---------------------------------------------------
+   🌿 Global Reset & Base Styles
+--------------------------------------------------- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+
+body {
+  line-height: 1.6;
+  color: #333;
+  background-color: #f9f9f9;
+}
+
+/* Text Utility */
+#contact-text {
+  font-size: 16px;
+  color: #790000;
+  margin-bottom: 15px;
+}
+
+/* ---------------------------------------------------
+   🌿 Navbar
+--------------------------------------------------- */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #1a1a1a;
+  padding: 10px 20px;
+  color: #fff;
+  position: relative;
+  z-index: 2000;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex; /* visible on PC */
+  gap: 20px;
+}
+
+.nav-links li a {
+  color: white;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.nav-links li a:hover {
+  color: #00c4cc;
+}
+
+.menu-toggle {
+  display: none; /* visible only on mobile */
+  font-size: 24px;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  z-index: 2001; /* slightly above menu */
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+  }
+
+  /* ✅ dropdown menu */
+  .nav-links {
+    display: none; /* hidden by default */
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    left: 12px;
+    right: 12px;
+    background-color: #222;
+    border-radius: 12px;
+    padding: 12px;
+    gap: 10px;
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.3);
+    z-index: 2100;
+  }
+
+  /* ✅ Only use .active */
+  .nav-links.active {
+    display: flex;
+  }
+
+  .nav-links li a {
+    font-size: 1rem;
+    padding: 10px 12px;
+    border-radius: 10px;
+  }
+}
+
+/* ---------------------------------------------------
+   🌿 Hero Section (Aesthetic + Responsive)
+--------------------------------------------------- */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 72px 16px 56px;
+  text-align: center;
+
+  background:
+    radial-gradient(
+      1200px 500px at 50% 0%,
+      rgba(255, 255, 255, 0.35),
+      transparent 60%
+    ),
+    linear-gradient(135deg, #01c3d1, #d9d9d9);
+}
+
+/* subtle texture layer */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      circle at 10% 20%,
+      rgba(255, 255, 255, 0.18),
+      transparent 40%
+    ),
+    radial-gradient(circle at 90% 30%, rgba(0, 0, 0, 0.08), transparent 45%),
+    radial-gradient(
+      circle at 50% 80%,
+      rgba(255, 255, 255, 0.12),
+      transparent 55%
+    );
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative;
+  width: min(980px, 100%);
+  padding: 26px 18px;
+  border-radius: 22px;
+
+  background: rgba(255, 255, 255, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 26px 80px rgba(0, 0, 0, 0.28);
+}
+
+/* ✅ override inline font sizes from HTML safely */
+.hero-content h1 {
+  margin: 0 0 12px 0;
+  color: #0b1220 !important;
+  letter-spacing: -0.8px;
+  font-size: clamp(36px, 9vw, 84px) !important;
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+.hero-content h1 + h1 {
+  margin: 0 0 14px 0;
+  font-size: clamp(18px, 3.8vw, 34px) !important;
+  line-height: 1.2;
+  color: rgba(11, 18, 32, 0.95) !important;
+  font-weight: 700;
+  text-wrap: balance;
+}
+
+/* -- Transferred styling from Inline CSS -- */
+/* Nav Button */
+#nav-btn {
+  color: aliceblue;
+}
+
+/* Hero Content h1 style*/
+#first-h1-styling {
+  text-align: center;
+  color: black;
+  font-size: 100px;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}
+
+/* Hero Content h1 & p font-style */
+#h1-font-style {
+  font-size: 50px;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
+
+#p-font-style {
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  font-size: 25px;
+}
+/* ------------------------------------------ */
+
+.hero-content p {
+  margin: 0 auto 18px auto;
+  max-width: 62ch;
+  font-size: clamp(14px, 3.6vw, 18px) !important;
+  line-height: 1.65;
+  color: rgba(15, 23, 42, 0.92) !important;
+}
+
+/* Hero button aesthetic */
+.hero-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  padding: 12px 18px;
+  border-radius: 999px;
+  font-weight: 700;
+
+  background: #0f172a;
+  color: #fff;
+  text-decoration: none;
+
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.25);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease;
+}
+
+.hero-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.33);
+  background: #111c35;
+}
+
+/* Mobile hero tuning */
+@media (max-width: 768px) {
+  .hero {
+    min-height: auto;
+    padding: 84px 14px 54px;
+  }
+
+  .hero-content {
+    padding: 20px 14px;
+    border-radius: 18px;
+  }
+
+  .hero-content p {
+    max-width: 40ch;
+  }
+}
+
+@media (max-width: 380px) {
+  .hero-content {
+    padding: 18px 12px;
+  }
+  .hero-btn {
+    width: 100%;
+  }
+}
+
+/* ---------------------------------------------------
+   🌿 Features Section
+--------------------------------------------------- */
+.features {
+  background-color: #f9f9f9;
+  padding: 60px 20px;
+  text-align: center;
+  cursor: default;
+}
+
+.features-title {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 50px;
+  color: #333;
+}
+
+.feature-container {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.feature-card {
+  background-color: #fff;
+  border-radius: 15px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
+  padding: 30px 20px;
+  width: 300px;
+  transition: all 0.3s ease;
+}
+
+.feature-card h4 {
+  font-size: 1.3rem;
+  margin-bottom: 15px;
+  color: #082e56;
+}
+
+.feature-card p {
+  color: #100371;
+  transition:
+    text-shadow 0.3s ease,
+    background-color 0.3s ease;
+  padding: 2px 4px;
+}
+
+.feature-card p:hover {
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 5px;
+}
+
+.feature-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+  background-color: #f0f8ff;
+}
+
+/* Features responsiveness */
+@media (max-width: 1024px) {
+  .feature-container {
+    gap: 25px;
+  }
+  .feature-card {
+    width: 280px;
+  }
+}
+
+@media (max-width: 768px) {
+  .features-title {
+    font-size: 2rem;
+    margin-bottom: 30px;
+  }
+  .feature-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+  .feature-card {
+    width: 92%;
+    max-width: 420px;
+  }
+}
+
+/* ---------------------------------------------------
+   🌿 Tab Popups (✅ FIXED: Always Centered)
+--------------------------------------------------- */
+.tab-popup {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center; /* ✅ always center */
+  justify-content: center; /* ✅ always center */
+  padding: 16px;
+
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(6px);
+
+  z-index: 5000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.tab-popup.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.tab-popup .tab-content {
+  width: min(520px, 92vw);
+  max-height: 82vh;
+  overflow: auto;
+
+  border-radius: 18px;
+  padding: 22px 20px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  position: relative;
+
+  transform: translateY(10px) scale(0.98);
+  transition: transform 0.25s ease;
+}
+
+.tab-popup.show .tab-content {
+  transform: translateY(0) scale(1);
+}
+
+.tab-popup .tab-content h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: #0f172a;
+  letter-spacing: 0.2px;
+}
+
+.tab-popup .tab-content p,
+.tab-popup .tab-content ul,
+.tab-popup .tab-content li {
+  font-size: 14px;
+  color: #334155;
+  line-height: 1.6;
+}
+
+.tab-popup ul {
+  padding-left: 18px;
+  margin-top: 8px;
+}
+
+.close-tab {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+  cursor: pointer;
+  color: #0f172a;
+  background: rgba(15, 23, 42, 0.08);
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease;
+}
+
+.close-tab:hover {
+  transform: scale(1.06);
+  background: rgba(15, 23, 42, 0.14);
+}
+
+/* small phones */
+@media (max-width: 480px) {
+  .tab-popup .tab-content {
+    width: 92vw;
+    border-radius: 16px;
+    padding: 18px 16px;
+  }
+}
+
+/* ---------------------------------------------------
+   🌿 Footer
+--------------------------------------------------- */
+footer {
+  text-align: center;
+  padding: 2rem;
+  background-color: #333;
+  color: #fff;
+}
+
+/* ---------------------------------------------------
+   🌿 Image Slider
+--------------------------------------------------- */
+.image-slider {
+  width: 100%;
+  height: 500px;
+  overflow: hidden;
+  position: relative;
+  border-radius: 0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  background-color: #04d4e3;
+}
+
+.slides {
+  display: flex;
+  width: 950%; /* you have many images; ok */
+  animation: slideShow 35s infinite;
+}
+
+.slides img {
+  width: 5%;
+  height: 500px;
+  object-fit: cover;
+  animation: zoomInOut 40s infinite;
+}
+
+@keyframes slideShow {
+  0%,
+  10% {
+    transform: translateX(0%);
+  }
+  15%,
+  25% {
+    transform: translateX(-10%);
+  }
+  30%,
+  40% {
+    transform: translateX(-20%);
+  }
+  45%,
+  55% {
+    transform: translateX(-30%);
+  }
+  60%,
+  70% {
+    transform: translateX(-40%);
+  }
+  75%,
+  85% {
+    transform: translateX(-50%);
+  }
+  90%,
+  100% {
+    transform: translateX(-60%);
+  }
+}
+
+@keyframes zoomInOut {
+  0%,
+  15%,
+  30%,
+  45%,
+  60%,
+  75%,
+  90%,
+  100% {
+    transform: scale(1);
+  }
+  10%,
+  25%,
+  40%,
+  55%,
+  70%,
+  85% {
+    transform: scale(1.02);
+  }
+}
+
+.slider-caption {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  color: white;
+  font-size: 24px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+/* Slider responsiveness */
+@media (max-width: 1024px) {
+  .image-slider {
+    height: 400px;
+  }
+  .slides img {
+    height: 400px;
+  }
+  .slider-caption {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .image-slider {
+    height: 300px;
+  }
+  .slides img {
+    height: 300px;
+  }
+  .slider-caption {
+    font-size: 16px;
+    bottom: 12px;
+    left: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .image-slider {
+    height: 200px;
+  }
+  .slides img {
+    height: 200px;
+  }
+  .slider-caption {
+    font-size: 14px;
+  }
+}
+
+/* ---------------------------------------------------
+   🌿 Auth Pages (Login / Signup)
+--------------------------------------------------- */
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #4a90e2, #50e3c2);
+}
+
+.auth-box {
+  padding: 40px 30px;
+  border-radius: 15px;
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+  width: 400px;
+  text-align: center;
+}
+
+.auth-header h2 {
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.auth-header p {
+  font-size: 14px;
+  color: #666;
+}
+
+.auth-header span#toggle-form {
+  color: #4a90e2;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.auth-form input {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.auth-form button {
+  padding: 12px;
+  background-color: #4a90e2;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.auth-form button:hover {
+  background-color: #357abd;
+}
+
+.hidden {
+  display: none;
+}
+
+
+/*Sign up now*/
+.text-signup {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  padding: 12px 18px;
+  border-radius: 999px;
+  font-weight: 700;
+
+  background: #07297a;
+  color: #fff;
+  text-decoration: none;
+}
+
+.text-signup:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 22px 55px rgba(0,0,0,0.3);
+  background: #05267f;
+}
