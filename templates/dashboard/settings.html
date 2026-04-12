@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Settings | Skillvine</title>
+  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+<body>
+  <div class="dashboard-container">
+    <aside class="sidebar">
+      <h2 class="logo">Skillvine</h2>
+
+      <nav class="sidebar-nav">
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+
+        {% if user.role == "student" %}
+          <a href="#">My Learning</a>
+          <a href="#">Notifications</a>
+        {% else %}
+          <a href="#">My Students</a>
+          <a href="#">Lessons</a>
+        {% endif %}
+
+        <a href="{% url 'settings' %}" class="active">Settings</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="topbar">
+        <h1>Settings</h1>
+        <p class="role-badge">{{ user.role|title }}</p>
+      </div>
+
+      <section class="cards">
+        <div class="card">
+          <h3>Full Name</h3>
+          <p>{{ user.full_name|default:user.username }}</p>
+        </div>
+
+        <div class="card">
+          <h3>Email</h3>
+          <p>{{ user.email }}</p>
+        </div>
+
+        <div class="card">
+          <h3>Role</h3>
+          <p>{{ user.role|title }}</p>
+        </div>
+      </section>
+
+      <section class="dashboard-panel">
+        <h2>Account Settings</h2>
+        <p>
+          Later, we can add edit profile, password change, and other account
+          settings here.
+        </p>
+
+        <form method="post" action="{% url 'logout' %}" style="margin-top: 20px;">
+          {% csrf_token %}
+          <button type="submit" class="logout-btn">Logout</button>
+        </form>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

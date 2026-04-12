@@ -149,3 +149,7 @@ body {
     gap: 12px;
   }
 }
+
+.dashboard-panel .logout-btn {
+  max-width: 220px;
+}
