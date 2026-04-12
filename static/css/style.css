@@ -18,12 +18,18 @@ body {
   line-height: 1.6;
   color: #333;
   background-color: #f9f9f9;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+body.fade-out {
+  opacity: 0;
 }
 
 /* Text Utility */
 #contact-text {
   font-size: 16px;
-  color: #790000;
+  color: #dd24c8e1;
   margin-bottom: 15px;
 }
 
@@ -177,7 +183,30 @@ body {
 /* -- Transferred styling from Inline CSS -- */
 /* Nav Button */
 #nav-btn {
-  color: aliceblue;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 700;
+  color: white;
+  background: linear-gradient(135deg, #052569, #12338ba2);
+  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.28);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
+}
+
+#nav-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(37, 99, 235, 0.35);
+  opacity: 0.96;
+}
+
+#nav-btn:active {
+  transform: translateY(0);
 }
 
 /* Hero Content h1 style*/

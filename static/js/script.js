@@ -1,5 +1,21 @@
 document.addEventListener("DOMContentLoaded", () => {
   /* ---------------------------------------------------
+     🌿 LOGIN FADE EFFECT
+  --------------------------------------------------- */
+  const navLoginBtn = document.getElementById("nav-btn");
+
+  if (navLoginBtn) {
+    navLoginBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      document.body.classList.add("fade-out");
+
+      setTimeout(() => {
+        window.location.href = navLoginBtn.href;
+      }, 300);
+    });
+  }
+  
+  /* ---------------------------------------------------
      🌿 ELEMENT REFERENCES
   --------------------------------------------------- */
   const heroBtn = document.querySelector(".hero-btn");
