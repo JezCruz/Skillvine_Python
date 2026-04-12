@@ -1,0 +1,61 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Teacher Dashboard | Skillvine</title>
+  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+<body>
+  <div class="dashboard-container">
+    <aside class="sidebar">
+      <h2 class="logo">Skillvine</h2>
+
+      <nav class="sidebar-nav">
+        <a href="{% url 'dashboard' %}" class="active">Dashboard</a>
+        <a href="#">My Students</a>
+        <a href="#">Lessons</a>
+        <a href="#">Settings</a>
+      </nav>
+
+      <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="logout-btn">Logout</button>
+      </form>
+    </aside>
+
+    <main class="main-content">
+      <div class="topbar">
+        <h1>Welcome, {{ user.full_name|default:user.username }}!</h1>
+        <p class="role-badge">Teacher</p>
+      </div>
+
+      <section class="cards">
+        <div class="card">
+          <h3>Role</h3>
+          <p>Teacher</p>
+        </div>
+
+        <div class="card">
+          <h3>Email</h3>
+          <p>{{ user.email }}</p>
+        </div>
+
+        <div class="card">
+          <h3>Teaching Status</h3>
+          <p>Ready to manage your lessons</p>
+        </div>
+      </section>
+
+      <section class="dashboard-panel">
+        <h2>Teacher Dashboard</h2>
+        <p>
+          This dashboard is for teachers. Later, we can add classes, student
+          lists, ratings, earnings, schedules, and notifications here.
+        </p>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

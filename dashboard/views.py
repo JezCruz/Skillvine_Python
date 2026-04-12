@@ -1,5 +1,14 @@
-from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
 
 
+@login_required
 def dashboard_home(request):
-    return HttpResponse("Welcome to Skillvine Dashboard!")
+    if request.user.role == "teacher":
+        template_name = "dashboard/teacher_dashboard.html"
+    else:
+        template_name = "dashboard/student_dashboard.html"
+
+    return render(request, template_name, {
+        "user": request.user,
+    })

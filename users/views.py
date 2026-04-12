@@ -5,6 +5,8 @@ from django.contrib.auth import get_user_model
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
+from django.contrib.auth import logout
+from django.shortcuts import redirect
 
 
 User = get_user_model()
@@ -88,3 +90,9 @@ def signup_view(request):
             "role": user.role,
         }
     }, status=201)
+
+
+def logout_view(request):
+    if request.method == "POST":
+        logout(request)
+    return redirect("login")
