@@ -70,11 +70,15 @@ document.addEventListener("DOMContentLoaded", () => {
         return showError(data.error || "Invalid email or password.");
       }
 
-      showNotice("Welcome back!", "success", 1800);
+      showNotice("Welcome back!", "success", 800);
 
       setTimeout(() => {
-        window.location.href = data.redirect || "/dashboard/";
-      }, 1800);
+        document.body.classList.add("fade-out");
+
+        setTimeout(() => {
+          window.location.href = data.redirect || "/dashboard/";
+        }, 350);
+      }, 500);
 
     } catch (err) {
       console.error(err);
