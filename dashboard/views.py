@@ -18,3 +18,9 @@ def settings_view(request):
     return render(request, "dashboard/settings.html", {
         "user": request.user,
     })
+
+@login_required
+def profile_view(request):
+    return render(request, "dashboard/profile.html", {
+        "user": request.user,
+    })
