@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Students | Skillvine</title>
+  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+<body>
+  <div class="dashboard-container">
+    <aside class="sidebar">
+      <h2 class="logo">Skillvine</h2>
+      <nav class="sidebar-nav">
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+        <a href="{% url 'profile' %}">Profile</a>
+        <a href="{% url 'my_students' %}" class="active">My Students</a>
+        <a href="{% url 'lessons' %}">Lessons</a>
+        <a href="{% url 'settings' %}">Settings</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="topbar">
+        <h1>My Students</h1>
+        <p class="role-badge">Teacher</p>
+      </div>
+
+      <section class="dashboard-panel">
+        <h2>Students Page</h2>
+        <p>
+          This is the My Students page. Later, we can add student lists,
+          progress tracking, recent activity, and communication tools here.
+        </p>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

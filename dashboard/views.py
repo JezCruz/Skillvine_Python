@@ -9,18 +9,34 @@ def dashboard_home(request):
     else:
         template_name = "dashboard/student_dashboard.html"
 
-    return render(request, template_name, {
-        "user": request.user,
-    })
+    return render(request, template_name, {"user": request.user})
+
 
 @login_required
 def settings_view(request):
-    return render(request, "dashboard/settings.html", {
-        "user": request.user,
-    })
+    return render(request, "dashboard/settings.html", {"user": request.user})
+
 
 @login_required
 def profile_view(request):
-    return render(request, "dashboard/profile.html", {
-        "user": request.user,
-    })
+    return render(request, "dashboard/profile.html", {"user": request.user})
+
+
+@login_required
+def my_learning_view(request):
+    return render(request, "dashboard/my_learning.html", {"user": request.user})
+
+
+@login_required
+def notifications_view(request):
+    return render(request, "dashboard/notifications.html", {"user": request.user})
+
+
+@login_required
+def my_students_view(request):
+    return render(request, "dashboard/my_students.html", {"user": request.user})
+
+
+@login_required
+def lessons_view(request):
+    return render(request, "dashboard/lessons.html", {"user": request.user})
