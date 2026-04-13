@@ -17,11 +17,11 @@
         <a href="{% url 'profile' %}" class="active">Profile</a>
 
         {% if user.role == "student" %}
-            <a href="{% url 'my_learning' %}">My Learning</a>
-            <a href="{% url 'notifications' %}">Notifications</a>
+          <a href="{% url 'my_learning' %}">My Learning</a>
+          <a href="{% url 'notifications' %}">Notifications</a>
         {% else %}
-            <a href="{% url 'my_students' %}">My Students</a>
-            <a href="{% url 'lessons' %}">Lessons</a>
+          <a href="{% url 'my_students' %}">My Students</a>
+          <a href="{% url 'lessons' %}">Lessons</a>
         {% endif %}
 
         <a href="{% url 'settings' %}">Settings</a>
@@ -34,12 +34,15 @@
         <p class="role-badge">{{ user.role|title }}</p>
       </div>
 
-      <section class="cards">
-        <div class="card">
-          <h3>Full Name</h3>
-          <p>{{ user.full_name|default:user.username }}</p>
-        </div>
+      {% if messages %}
+        {% for message in messages %}
+          <div class="flash-message {{ message.tags }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
 
+      <section class="cards">
         <div class="card">
           <h3>Email</h3>
           <p>{{ user.email }}</p>
@@ -49,14 +52,30 @@
           <h3>Role</h3>
           <p>{{ user.role|title }}</p>
         </div>
+
+        <div class="card">
+          <h3>Username</h3>
+          <p>{{ user.username }}</p>
+        </div>
       </section>
 
-      <section class="dashboard-panel">
-        <h2>Profile Information</h2>
-        <p>
-          This is your current Skillvine profile page. Later, we can add
-          profile editing, avatar upload, bio, and account customization here.
-        </p>
+      <section class="dashboard-panel" style="margin-top: 24px;">
+        <h2>Edit Profile</h2>
+        <form method="post" class="profile-form">
+          {% csrf_token %}
+
+          <label for="full_name">Full Name</label>
+          <input
+            type="text"
+            id="full_name"
+            name="full_name"
+            value="{{ user.full_name|default:user.username }}"
+            placeholder="Enter your full name"
+            required
+          >
+
+          <button type="submit" class="save-btn">Save Changes</button>
+        </form>
       </section>
     </main>
   </div>

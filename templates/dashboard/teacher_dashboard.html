@@ -12,13 +12,13 @@
     <aside class="sidebar">
       <h2 class="logo">Skillvine</h2>
 
-        <nav class="sidebar-nav">
-            <a href="{% url 'dashboard' %}" class="active">Dashboard</a>
-            <a href="{% url 'profile' %}">Profile</a>
-            <a href="{% url 'my_students' %}">My Students</a>
-            <a href="{% url 'lessons' %}">Lessons</a>
-            <a href="{% url 'settings' %}">Settings</a>
-        </nav>
+      <nav class="sidebar-nav">
+        <a href="{% url 'dashboard' %}" class="active">Dashboard</a>
+        <a href="{% url 'profile' %}">Profile</a>
+        <a href="{% url 'my_students' %}">My Students</a>
+        <a href="{% url 'lessons' %}">Lessons</a>
+        <a href="{% url 'settings' %}">Settings</a>
+      </nav>
     </aside>
 
     <main class="main-content">
@@ -29,27 +29,36 @@
 
       <section class="cards">
         <div class="card">
-          <h3>Role</h3>
-          <p>Teacher</p>
+          <h3>Total Students</h3>
+          <p>{{ total_students }}</p>
         </div>
 
         <div class="card">
-          <h3>Email</h3>
-          <p>{{ user.email }}</p>
+          <h3>Active Lessons</h3>
+          <p>{{ active_lessons }}</p>
         </div>
 
         <div class="card">
-          <h3>Teaching Status</h3>
-          <p>Ready to manage your lessons</p>
+          <h3>Average Rating</h3>
+          <p>{{ average_rating }}</p>
         </div>
       </section>
 
       <section class="dashboard-panel">
-        <h2>Teacher Dashboard</h2>
+        <h2>Teacher Overview</h2>
         <p>
-          This dashboard is for teachers. Later, we can add classes, student
-          lists, ratings, earnings, schedules, and notifications here.
+          Manage your lessons, monitor student activity, and build your teaching
+          credibility through ratings and engagement.
         </p>
+      </section>
+
+      <section class="dashboard-panel" style="margin-top: 24px;">
+        <h2>Recent Activity</h2>
+        <ul class="activity-list">
+          {% for activity in recent_activities %}
+            <li>{{ activity }}</li>
+          {% endfor %}
+        </ul>
       </section>
     </main>
   </div>
