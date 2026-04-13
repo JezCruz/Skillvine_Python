@@ -123,7 +123,9 @@ def my_learning_view(request):
         messages.error(request, "Only students can access My Learning.")
         return redirect("dashboard")
 
-    enrollments = Enrollment.objects.filter(student=request.user).select_related("lesson", "lesson__teacher").order_by("-created_at")
+    enrollments = Enrollment.objects.filter(student=request.user).select_related(
+        "lesson", "lesson__teacher"
+    ).order_by("-created_at")
 
     return render(request, "dashboard/my_learning.html", {
         "user": request.user,
@@ -225,4 +227,4 @@ def enroll_lesson_view(request, lesson_id):
     else:
         messages.info(request, f"You are already enrolled in '{lesson.title}'.")
 
-    return redirect("browse_lessons")
+    return redirect("browse_lessons")   

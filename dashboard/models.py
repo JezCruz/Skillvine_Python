@@ -30,6 +30,33 @@ class Lesson(models.Model):
     def __str__(self):
         return self.title
     
+    
+class Enrollment(models.Model):
+    STATUS_CHOICES = (
+        ("enrolled", "Enrolled"),
+        ("completed", "Completed"),
+        ("cancelled", "Cancelled"),
+    )
+
+    student = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="enrollments"
+    )
+    lesson = models.ForeignKey(
+        Lesson,
+        on_delete=models.CASCADE,
+        related_name="enrollments"
+    )
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="enrolled")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("student", "lesson")
+
+    def __str__(self):
+        return f"{self.student} -> {self.lesson}"
+    
 
 class Enrollment(models.Model):
     STATUS_CHOICES = (
