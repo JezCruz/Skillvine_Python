@@ -17,11 +17,12 @@
         <a href="{% url 'profile' %}" class="active">Profile</a>
 
         {% if user.role == "student" %}
-          <a href="{% url 'my_learning' %}">My Learning</a>
-          <a href="{% url 'notifications' %}">Notifications</a>
+            <a href="{% url 'my_learning' %}">My Learning</a>
+            <a href="{% url 'notifications' %}">Notifications</a>
         {% else %}
-          <a href="{% url 'my_students' %}">My Students</a>
-          <a href="{% url 'lessons' %}">Lessons</a>
+            <a href="{% url 'my_students' %}">My Students</a>
+            <a href="{% url 'lessons' %}">Lessons</a>
+            <a href="{% url 'notifications' %}">Notifications</a>
         {% endif %}
 
         <a href="{% url 'settings' %}">Settings</a>

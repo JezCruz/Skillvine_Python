@@ -66,7 +66,55 @@ def my_learning_view(request):
 
 @login_required
 def notifications_view(request):
-    return render(request, "dashboard/notifications.html", {"user": request.user})
+    if request.user.role == "teacher":
+        template_name = "dashboard/teacher_notifications.html"
+        notifications = [
+            {
+                "title": "New Student Enrollment",
+                "message": "A new student joined your Beginner Guitar class.",
+                "time": "2 hours ago",
+                "status": "unread",
+            },
+            {
+                "title": "Lesson Reminder",
+                "message": "You have a scheduled piano lesson tomorrow at 3:00 PM.",
+                "time": "5 hours ago",
+                "status": "read",
+            },
+            {
+                "title": "New Rating Received",
+                "message": "You received a 5-star rating from one of your students.",
+                "time": "1 day ago",
+                "status": "read",
+            },
+        ]
+    else:
+        template_name = "dashboard/student_notifications.html"
+        notifications = [
+            {
+                "title": "Upcoming Lesson",
+                "message": "Your English speaking lesson starts tomorrow at 10:00 AM.",
+                "time": "1 hour ago",
+                "status": "unread",
+            },
+            {
+                "title": "Teacher Response",
+                "message": "Your teacher replied to your session request.",
+                "time": "4 hours ago",
+                "status": "read",
+            },
+            {
+                "title": "Coins Added",
+                "message": "You received 20 bonus coins for completing an activity.",
+                "time": "1 day ago",
+                "status": "read",
+            },
+        ]
+
+    return render(request, template_name, {
+        "user": request.user,
+        "notifications": notifications,
+    })
 
 
 @login_required

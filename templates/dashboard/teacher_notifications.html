@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Lessons | Skillvine</title>
+  <title>Teacher Notifications | Skillvine</title>
   <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
 </head>
 <body>
@@ -15,24 +15,33 @@
         <a href="{% url 'dashboard' %}">Dashboard</a>
         <a href="{% url 'profile' %}">Profile</a>
         <a href="{% url 'my_students' %}">My Students</a>
-        <a href="{% url 'lessons' %}" class="active">Lessons</a>
-        <a href="{% url 'notifications' %}">Notifications</a>
+        <a href="{% url 'lessons' %}">Lessons</a>
+        <a href="{% url 'notifications' %}" class="active">Notifications</a>
         <a href="{% url 'settings' %}">Settings</a>
       </nav>
     </aside>
 
     <main class="main-content">
       <div class="topbar">
-        <h1>Lessons</h1>
+        <h1>Notifications</h1>
         <p class="role-badge">Teacher</p>
       </div>
 
       <section class="dashboard-panel">
-        <h2>Lessons Page</h2>
-        <p>
-          This is the Lessons page. Later, we can add created lessons,
-          schedules, lesson management, and teaching materials here.
-        </p>
+        <h2>Recent Notifications</h2>
+
+        <div class="notification-list">
+          {% for note in notifications %}
+            <div class="notification-card {% if note.status == 'unread' %}unread{% endif %}">
+              <div class="notification-header">
+                <h3>{{ note.title }}</h3>
+                <span class="notification-time">{{ note.time }}</span>
+              </div>
+              <p>{{ note.message }}</p>
+              <span class="notification-status">{{ note.status|title }}</span>
+            </div>
+          {% endfor %}
+        </div>
       </section>
     </main>
   </div>

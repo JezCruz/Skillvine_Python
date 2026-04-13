@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Notifications | Skillvine</title>
+  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+<body>
+  <div class="dashboard-container">
+    <aside class="sidebar">
+      <h2 class="logo">Skillvine</h2>
+      <nav class="sidebar-nav">
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+        <a href="{% url 'profile' %}">Profile</a>
+        <a href="{% url 'my_learning' %}">My Learning</a>
+        <a href="{% url 'notifications' %}" class="active">Notifications</a>
+        <a href="{% url 'settings' %}">Settings</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="topbar">
+        <h1>Notifications</h1>
+        <p class="role-badge">Student</p>
+      </div>
+
+      <section class="dashboard-panel">
+        <h2>Recent Notifications</h2>
+
+        <div class="notification-list">
+          {% for note in notifications %}
+            <div class="notification-card {% if note.status == 'unread' %}unread{% endif %}">
+              <div class="notification-header">
+                <h3>{{ note.title }}</h3>
+                <span class="notification-time">{{ note.time }}</span>
+              </div>
+              <p>{{ note.message }}</p>
+              <span class="notification-status">{{ note.status|title }}</span>
+            </div>
+          {% endfor %}
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
