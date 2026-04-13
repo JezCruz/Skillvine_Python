@@ -47,6 +47,7 @@
             <div class="lesson-card">
               <h3>{{ item.title }}</h3>
               <p><strong>Category:</strong> {{ item.get_category_display }}</p>
+              <p><strong>Price:</strong> {{ item.price_coins }} coins</p>
               <p><strong>Status:</strong> {{ item.status|title }}</p>
               <p><strong>Created:</strong> {{ item.created_at|date:"M d, Y" }}</p>
 

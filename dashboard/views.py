@@ -211,9 +211,18 @@ def create_lesson_view(request):
         category = request.POST.get("category", "").strip()
         description = request.POST.get("description", "").strip()
         status = request.POST.get("status", "").strip()
+        price_coins = request.POST.get("price_coins", "").strip()
 
-        if not title or not category or not status:
+        if not title or not category or not status or not price_coins:
             messages.error(request, "Please fill in all required fields.")
+            return redirect("create_lesson")
+
+        try:
+            price_coins = int(price_coins)
+            if price_coins < 1:
+                raise ValueError
+        except ValueError:
+            messages.error(request, "Price must be a valid number greater than 0.")
             return redirect("create_lesson")
 
         Lesson.objects.create(
@@ -222,6 +231,7 @@ def create_lesson_view(request):
             category=category,
             description=description,
             status=status,
+            price_coins=price_coins,
         )
 
         messages.success(request, "Lesson created successfully.")
@@ -269,15 +279,30 @@ def enroll_lesson_view(request, lesson_id):
         messages.error(request, "You cannot enroll in your own lesson.")
         return redirect("browse_lessons")
 
-    enrollment, created = Enrollment.objects.get_or_create(
-        student=request.user,
-        lesson=lesson,
-        defaults={"status": "enrolled"},
+    existing = Enrollment.objects.filter(student=request.user, lesson=lesson).first()
+    if existing:
+        messages.info(request, f"You are already enrolled in '{lesson.title}'.")
+        return redirect("browse_lessons")
+
+    success = adjust_wallet(
+        user=request.user,
+        transaction_type="debit",
+        amount=lesson.price_coins,
+        description=f"Enrollment payment for lesson: {lesson.title}",
     )
 
-    if created:
-        messages.success(request, f"You enrolled in '{lesson.title}' successfully.")
-    else:
-        messages.info(request, f"You are already enrolled in '{lesson.title}'.")
+    if not success:
+        messages.error(request, f"Not enough coins to enroll in '{lesson.title}'.")
+        return redirect("browse_lessons")
 
-    return redirect("browse_lessons")   
+    Enrollment.objects.create(
+        student=request.user,
+        lesson=lesson,
+        status="enrolled",
+    )
+
+    messages.success(
+        request,
+        f"You enrolled in '{lesson.title}' successfully for {lesson.price_coins} coins."
+    )
+    return redirect("browse_lessons")  

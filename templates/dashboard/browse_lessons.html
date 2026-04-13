@@ -45,6 +45,7 @@
               <h3>{{ item.title }}</h3>
               <p><strong>Teacher:</strong> {{ item.teacher.full_name|default:item.teacher.username }}</p>
               <p><strong>Category:</strong> {{ item.get_category_display }}</p>
+              <p><strong>Price:</strong> {{ item.price_coins }} coins</p>
               {% if item.description %}
                 <p><strong>Description:</strong> {{ item.description }}</p>
               {% endif %}

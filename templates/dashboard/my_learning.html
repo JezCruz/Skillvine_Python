@@ -39,6 +39,7 @@
               <p><strong>Category:</strong> {{ enrollment.lesson.get_category_display }}</p>
               <p><strong>Status:</strong> {{ enrollment.status|title }}</p>
               <p><strong>Enrolled:</strong> {{ enrollment.created_at|date:"M d, Y" }}</p>
+              <p><strong>Price:</strong> {{ enrollment.lesson.price_coins }} coins</p>
               <span class="lesson-status {{ enrollment.status|lower }}">{{ enrollment.status|title }}</span>
             </div>
           {% empty %}

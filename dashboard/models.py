@@ -25,6 +25,7 @@ class Lesson(models.Model):
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default="other")
     description = models.TextField(blank=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="draft")
+    price_coins = models.PositiveIntegerField(default=50)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

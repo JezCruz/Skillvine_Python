@@ -18,7 +18,7 @@ def make_draft(modeladmin, request, queryset):
 
 @admin.register(Lesson)
 class LessonAdmin(admin.ModelAdmin):
-    list_display = ("id", "title", "teacher", "category", "status", "created_at")
+    list_display = ("id", "title", "teacher", "category", "price_coins", "status", "created_at")
     list_filter = ("category", "status", "created_at")
     search_fields = ("title", "teacher__email", "teacher__full_name")
     ordering = ("-created_at",)
