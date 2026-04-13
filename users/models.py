@@ -1,8 +1,5 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from dashboard.models import Wallet
 
 
 class User(AbstractUser):
@@ -16,8 +13,3 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
-    
-@receiver(post_save, sender=User)
-def create_user_wallet(sender, instance, created, **kwargs):
-    if created:
-        Wallet.objects.create(user=instance)

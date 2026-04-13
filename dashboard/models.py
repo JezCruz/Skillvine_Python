@@ -115,3 +115,39 @@ class CoinTransaction(models.Model):
 
     def __str__(self):
         return f"{self.user} - {self.transaction_type} - {self.amount}"
+    
+
+from django.conf import settings
+from django.db import models
+
+
+class Wallet(models.Model):
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="wallet"
+    )
+    balance = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.user} Wallet"
+
+
+class CoinTransaction(models.Model):
+    TRANSACTION_TYPES = (
+        ("credit", "Credit"),
+        ("debit", "Debit"),
+    )
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="coin_transactions"
+    )
+    transaction_type = models.CharField(max_length=20, choices=TRANSACTION_TYPES)
+    amount = models.PositiveIntegerField()
+    description = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user} - {self.transaction_type} - {self.amount}"
