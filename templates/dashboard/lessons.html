@@ -27,17 +27,36 @@
         <p class="role-badge">Teacher</p>
       </div>
 
+      {% if messages %}
+        {% for message in messages %}
+          <div class="flash-message {{ message.tags }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+
       <section class="dashboard-panel">
-        <h2>Created Lessons</h2>
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap;">
+          <h2>Created Lessons</h2>
+          <a href="{% url 'create_lesson' %}" class="save-btn" style="text-decoration:none;">+ Create Lesson</a>
+        </div>
 
         <div class="lesson-grid">
           {% for item in lesson_items %}
             <div class="lesson-card">
               <h3>{{ item.title }}</h3>
-              <p><strong>Category:</strong> {{ item.category }}</p>
-              <p><strong>Students:</strong> {{ item.students }}</p>
-              <span class="lesson-status {{ item.status|lower }}">{{ item.status }}</span>
+              <p><strong>Category:</strong> {{ item.get_category_display }}</p>
+              <p><strong>Status:</strong> {{ item.status|title }}</p>
+              <p><strong>Created:</strong> {{ item.created_at|date:"M d, Y" }}</p>
+
+              {% if item.description %}
+                <p><strong>Description:</strong> {{ item.description }}</p>
+              {% endif %}
+
+              <span class="lesson-status {{ item.status|lower }}">{{ item.status|title }}</span>
             </div>
+          {% empty %}
+            <p style="margin-top:18px; color:#475569;">No lessons created yet.</p>
           {% endfor %}
         </div>
       </section>

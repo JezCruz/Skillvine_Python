@@ -1,0 +1,72 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Create Lesson | Skillvine</title>
+  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+<body>
+  <div class="dashboard-container">
+    <aside class="sidebar">
+      <h2 class="logo">Skillvine</h2>
+      <nav class="sidebar-nav">
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+        <a href="{% url 'profile' %}">Profile</a>
+        <a href="{% url 'my_students' %}">My Students</a>
+        <a href="{% url 'lessons' %}" class="active">Lessons</a>
+        <a href="{% url 'notifications' %}">Notifications</a>
+        <a href="{% url 'settings' %}">Settings</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="topbar">
+        <h1>Create Lesson</h1>
+        <p class="role-badge">Teacher</p>
+      </div>
+
+      {% if messages %}
+        {% for message in messages %}
+          <div class="flash-message {{ message.tags }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <section class="dashboard-panel">
+        <h2>New Lesson</h2>
+
+        <form method="post" class="profile-form">
+          {% csrf_token %}
+
+          <label for="title">Lesson Title</label>
+          <input type="text" id="title" name="title" placeholder="Enter lesson title" required>
+
+          <label for="category">Category</label>
+          <select id="category" name="category" required>
+            <option value="">Select category</option>
+            <option value="music">Music</option>
+            <option value="language">Language</option>
+            <option value="fitness">Fitness</option>
+            <option value="academics">Academics</option>
+            <option value="other">Other</option>
+          </select>
+
+          <label for="description">Description</label>
+          <textarea id="description" name="description" rows="5" placeholder="Enter lesson description"></textarea>
+
+          <label for="status">Status</label>
+          <select id="status" name="status" required>
+            <option value="draft">Draft</option>
+            <option value="active">Active</option>
+          </select>
+
+          <button type="submit" class="save-btn">Create Lesson</button>
+        </form>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

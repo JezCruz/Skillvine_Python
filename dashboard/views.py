@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import render, redirect
-
+from .models import Lesson
 
 @login_required
 def dashboard_home(request):
@@ -148,28 +148,45 @@ def my_learning_view(request):
 
 @login_required
 def lessons_view(request):
-    lesson_items = [
-        {
-            "title": "Beginner Guitar",
-            "category": "Music",
-            "students": 8,
-            "status": "Active",
-        },
-        {
-            "title": "Piano for Kids",
-            "category": "Music",
-            "students": 5,
-            "status": "Active",
-        },
-        {
-            "title": "Basic Fitness Training",
-            "category": "Wellness",
-            "students": 11,
-            "status": "Draft",
-        },
-    ]
+    if request.user.role != "teacher":
+        messages.error(request, "Only teachers can access lessons management.")
+        return redirect("dashboard")
+
+    lesson_items = Lesson.objects.filter(teacher=request.user).order_by("-created_at")
 
     return render(request, "dashboard/lessons.html", {
         "user": request.user,
         "lesson_items": lesson_items,
+    })
+
+
+@login_required
+def create_lesson_view(request):
+    if request.user.role != "teacher":
+        messages.error(request, "Only teachers can create lessons.")
+        return redirect("dashboard")
+
+    if request.method == "POST":
+        title = request.POST.get("title", "").strip()
+        category = request.POST.get("category", "").strip()
+        description = request.POST.get("description", "").strip()
+        status = request.POST.get("status", "").strip()
+
+        if not title or not category or not status:
+            messages.error(request, "Please fill in all required fields.")
+            return redirect("create_lesson")
+
+        Lesson.objects.create(
+            teacher=request.user,
+            title=title,
+            category=category,
+            description=description,
+            status=status,
+        )
+
+        messages.success(request, "Lesson created successfully.")
+        return redirect("lessons")
+
+    return render(request, "dashboard/create_lesson.html", {
+        "user": request.user,
     })
