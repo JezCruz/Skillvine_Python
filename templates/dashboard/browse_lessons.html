@@ -1,0 +1,73 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Browse Lessons | Skillvine</title>
+  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+<body>
+  <div class="dashboard-container">
+    <aside class="sidebar">
+      <h2 class="logo">Skillvine</h2>
+      <nav class="sidebar-nav">
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+        <a href="{% url 'profile' %}">Profile</a>
+        <a href="{% url 'browse_lessons' %}" class="active">Browse Lessons</a>
+        <a href="{% url 'my_learning' %}">My Learning</a>
+        <a href="{% url 'notifications' %}">Notifications</a>
+        <a href="{% url 'settings' %}">Settings</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="topbar">
+        <h1>Browse Lessons</h1>
+        <p class="role-badge">Student</p>
+      </div>
+
+      {% if messages %}
+        {% for message in messages %}
+          <div class="flash-message {{ message.tags }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <section class="dashboard-panel">
+        <h2>Available Lessons</h2>
+
+        <div class="lesson-grid">
+          {% for item in lessons %}
+            <div class="lesson-card">
+              <h3>{{ item.title }}</h3>
+              <p><strong>Teacher:</strong> {{ item.teacher.full_name|default:item.teacher.username }}</p>
+              <p><strong>Category:</strong> {{ item.get_category_display }}</p>
+              {% if item.description %}
+                <p><strong>Description:</strong> {{ item.description }}</p>
+              {% endif %}
+              <span class="lesson-status {{ item.status|lower }}">{{ item.status|title }}</span>
+
+              <div style="margin-top: 16px;">
+                {% if item.id in enrolled_lesson_ids %}
+                  <button class="save-btn" disabled style="opacity: 0.7; cursor: not-allowed;">
+                    Already Enrolled
+                  </button>
+                {% else %}
+                  <form method="post" action="{% url 'enroll_lesson' item.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="save-btn">Enroll Now</button>
+                  </form>
+                {% endif %}
+              </div>
+            </div>
+          {% empty %}
+            <p style="margin-top:18px; color:#475569;">No active lessons available yet.</p>
+          {% endfor %}
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

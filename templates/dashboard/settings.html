@@ -17,6 +17,7 @@
         <a href="{% url 'profile' %}">Profile</a>
 
         {% if user.role == "student" %}
+            <a href="{% url 'browse_lessons' %}">Browse Lessons</a>
             <a href="{% url 'my_learning' %}">My Learning</a>
             <a href="{% url 'notifications' %}">Notifications</a>
         {% else %}

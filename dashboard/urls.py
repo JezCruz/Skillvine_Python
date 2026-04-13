@@ -8,6 +8,8 @@ from .views import (
     my_students_view,
     lessons_view,
     create_lesson_view,
+    browse_lessons_view,
+    enroll_lesson_view,
 )
 
 urlpatterns = [
@@ -19,4 +21,6 @@ urlpatterns = [
     path("my-students/", my_students_view, name="my_students"),
     path("lessons/", lessons_view, name="lessons"),
     path("lessons/create/", create_lesson_view, name="create_lesson"),
+    path("browse-lessons/", browse_lessons_view, name="browse_lessons"),
+    path("browse-lessons/<int:lesson_id>/enroll/", enroll_lesson_view, name="enroll_lesson"),
 ]

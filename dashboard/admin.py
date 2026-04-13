@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Lesson
+from .models import Lesson, Enrollment
 
 admin.site.site_header = "Skillvine Admin"
 admin.site.site_title = "Skillvine Admin Portal"
@@ -18,14 +18,7 @@ def make_draft(modeladmin, request, queryset):
 
 @admin.register(Lesson)
 class LessonAdmin(admin.ModelAdmin):
-    list_display = (
-        "id",
-        "title",
-        "teacher",
-        "category",
-        "status",
-        "created_at",
-    )
+    list_display = ("id", "title", "teacher", "category", "status", "created_at")
     list_filter = ("category", "status", "created_at")
     search_fields = ("title", "teacher__email", "teacher__full_name")
     ordering = ("-created_at",)
@@ -35,3 +28,11 @@ class LessonAdmin(admin.ModelAdmin):
         if db_field.name == "teacher":
             kwargs["queryset"] = db_field.remote_field.model.objects.filter(role="teacher")
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+
+@admin.register(Enrollment)
+class EnrollmentAdmin(admin.ModelAdmin):
+    list_display = ("id", "student", "lesson", "status", "created_at")
+    list_filter = ("status", "created_at")
+    search_fields = ("student__email", "student__full_name", "lesson__title")
+    ordering = ("-created_at",)

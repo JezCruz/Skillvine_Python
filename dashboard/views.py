@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import render, redirect
-from .models import Lesson
+from .models import Lesson, Enrollment
 
 @login_required
 def dashboard_home(request):
@@ -119,30 +119,15 @@ def my_students_view(request):
 
 @login_required
 def my_learning_view(request):
-    learning_items = [
-        {
-            "title": "English Speaking Basics",
-            "teacher": "Teacher Maria",
-            "schedule": "Mon & Wed • 10:00 AM",
-            "status": "Ongoing",
-        },
-        {
-            "title": "Beginner Guitar",
-            "teacher": "Teacher John",
-            "schedule": "Fri • 2:00 PM",
-            "status": "Upcoming",
-        },
-        {
-            "title": "Math Support Class",
-            "teacher": "Teacher Anne",
-            "schedule": "Sat • 9:00 AM",
-            "status": "Completed",
-        },
-    ]
+    if request.user.role != "student":
+        messages.error(request, "Only students can access My Learning.")
+        return redirect("dashboard")
+
+    enrollments = Enrollment.objects.filter(student=request.user).select_related("lesson", "lesson__teacher").order_by("-created_at")
 
     return render(request, "dashboard/my_learning.html", {
         "user": request.user,
-        "learning_items": learning_items,
+        "enrollments": enrollments,
     })
 
 
@@ -190,3 +175,54 @@ def create_lesson_view(request):
     return render(request, "dashboard/create_lesson.html", {
         "user": request.user,
     })
+
+
+@login_required
+def browse_lessons_view(request):
+    if request.user.role != "student":
+        messages.error(request, "Only students can browse lessons.")
+        return redirect("dashboard")
+
+    lessons = Lesson.objects.filter(status="active").select_related("teacher").order_by("-created_at")
+    enrolled_lesson_ids = set(
+        Enrollment.objects.filter(student=request.user).values_list("lesson_id", flat=True)
+    )
+
+    return render(request, "dashboard/browse_lessons.html", {
+        "user": request.user,
+        "lessons": lessons,
+        "enrolled_lesson_ids": enrolled_lesson_ids,
+    })
+
+
+@login_required
+def enroll_lesson_view(request, lesson_id):
+    if request.user.role != "student":
+        messages.error(request, "Only students can enroll in lessons.")
+        return redirect("dashboard")
+
+    if request.method != "POST":
+        return redirect("browse_lessons")
+
+    try:
+        lesson = Lesson.objects.get(id=lesson_id, status="active")
+    except Lesson.DoesNotExist:
+        messages.error(request, "Lesson not found.")
+        return redirect("browse_lessons")
+
+    if lesson.teacher_id == request.user.id:
+        messages.error(request, "You cannot enroll in your own lesson.")
+        return redirect("browse_lessons")
+
+    enrollment, created = Enrollment.objects.get_or_create(
+        student=request.user,
+        lesson=lesson,
+        defaults={"status": "enrolled"},
+    )
+
+    if created:
+        messages.success(request, f"You enrolled in '{lesson.title}' successfully.")
+    else:
+        messages.info(request, f"You are already enrolled in '{lesson.title}'.")
+
+    return redirect("browse_lessons")

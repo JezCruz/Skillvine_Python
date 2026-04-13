@@ -14,6 +14,7 @@
       <nav class="sidebar-nav">
         <a href="{% url 'dashboard' %}">Dashboard</a>
         <a href="{% url 'profile' %}">Profile</a>
+        <a href="{% url 'browse_lessons' %}">Browse Lessons</a>
         <a href="{% url 'my_learning' %}" class="active">My Learning</a>
         <a href="{% url 'notifications' %}">Notifications</a>
         <a href="{% url 'settings' %}">Settings</a>
@@ -27,16 +28,20 @@
       </div>
 
       <section class="dashboard-panel">
-        <h2>Enrolled Classes</h2>
+        <h2>My Enrolled Lessons</h2>
 
         <div class="lesson-grid">
-          {% for item in learning_items %}
+          {% for enrollment in enrollments %}
             <div class="lesson-card">
-              <h3>{{ item.title }}</h3>
-              <p><strong>Teacher:</strong> {{ item.teacher }}</p>
-              <p><strong>Schedule:</strong> {{ item.schedule }}</p>
-              <span class="lesson-status {{ item.status|lower }}">{{ item.status }}</span>
+              <h3>{{ enrollment.lesson.title }}</h3>
+              <p><strong>Teacher:</strong> {{ enrollment.lesson.teacher.full_name|default:enrollment.lesson.teacher.username }}</p>
+              <p><strong>Category:</strong> {{ enrollment.lesson.get_category_display }}</p>
+              <p><strong>Status:</strong> {{ enrollment.status|title }}</p>
+              <p><strong>Enrolled:</strong> {{ enrollment.created_at|date:"M d, Y" }}</p>
+              <span class="lesson-status {{ enrollment.status|lower }}">{{ enrollment.status|title }}</span>
             </div>
+          {% empty %}
+            <p style="margin-top:18px; color:#475569;">You have not enrolled in any lessons yet.</p>
           {% endfor %}
         </div>
       </section>
