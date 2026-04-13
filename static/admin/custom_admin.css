@@ -1,0 +1,172 @@
+/* Overall page */
+body {
+  background: #0b1220;
+  color: #e5e7eb;
+}
+
+/* Header */
+#header {
+  background: #0f172a;
+  color: #ffffff;
+  border-bottom: 1px solid #1e293b;
+}
+
+#site-name a,
+#site-name a:link,
+#site-name a:visited {
+  color: #c1bdad;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+/* Top user tools */
+#user-tools,
+#user-tools a {
+  color: #cbd5e1;
+}
+
+/* Breadcrumbs */
+div.breadcrumbs {
+  background: #111827;
+  color: #cbd5e1;
+  border-bottom: 1px solid #1f2937;
+}
+
+div.breadcrumbs a {
+  color: #93c5fd;
+}
+
+/* Main content */
+#content {
+  background: #0b1220;
+  color: #e5e7eb;
+}
+
+#content h1 {
+  color: #ffffff;
+}
+
+/* Modules / cards */
+.module,
+.inline-group,
+#content-related,
+.dashboard #content-related {
+  background: #111827;
+  border: 1px solid #1f2937;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Module headers */
+.module h2,
+.module caption,
+.inline-group h2 {
+  background: #2563eb;
+  color: white;
+  padding: 12px 14px;
+  font-weight: 700;
+}
+
+/* Tables / rows */
+#changelist table thead th,
+.results thead th {
+  background: #1e293b;
+  color: #f8fafc;
+}
+
+#changelist table tbody tr,
+.results tbody tr {
+  background: #0f172a;
+}
+
+#changelist table tbody tr:nth-child(even),
+.results tbody tr:nth-child(even) {
+  background: #111827;
+}
+
+td,
+th {
+  border-color: #1f2937;
+}
+
+/* Links */
+a {
+  color: #7dd3fc;
+}
+
+a:hover {
+  color: #bae6fd;
+}
+
+/* Recent actions */
+#content-related h2 {
+  background: transparent;
+  color: #ffffff;
+  padding: 0;
+  margin-bottom: 16px;
+}
+
+.actionlist li {
+  border-bottom: 1px solid #1f2937;
+  padding: 10px 0;
+}
+
+/* Buttons */
+.button,
+input[type=submit],
+input[type=button],
+.submit-row input,
+a.button {
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 14px;
+}
+
+.button:hover,
+input[type=submit]:hover,
+input[type=button]:hover,
+.submit-row input:hover,
+a.button:hover {
+  background: #1d4ed8;
+}
+
+/* Forms */
+input,
+textarea,
+select {
+  background: #0f172a;
+  color: #e5e7eb;
+  border: 1px solid #334155;
+  border-radius: 8px;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #2563eb;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+/* Messages */
+.success {
+  background: #052e16;
+  color: #bbf7d0;
+}
+
+.warning {
+  background: #422006;
+  color: #fde68a;
+}
+
+.error {
+  background: #450a0a;
+  color: #fecaca;
+}
+
+/* Dashboard spacing */
+.dashboard .module {
+  margin-bottom: 20px;
+}
