@@ -1,7 +1,31 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import render, redirect
-from .models import Lesson, Enrollment
+from .models import Lesson, Enrollment, Wallet, CoinTransaction
+
+
+def adjust_wallet(user, transaction_type, amount, description):
+    wallet, _ = Wallet.objects.get_or_create(user=user)
+
+    if transaction_type == "credit":
+        wallet.balance += amount
+    elif transaction_type == "debit":
+        if wallet.balance < amount:
+            return False
+        wallet.balance -= amount
+    else:
+        return False
+
+    wallet.save()
+
+    CoinTransaction.objects.create(
+        user=user,
+        transaction_type=transaction_type,
+        amount=amount,
+        description=description,
+    )
+    return True
+
 
 @login_required
 def dashboard_home(request):
@@ -9,30 +33,48 @@ def dashboard_home(request):
         template_name = "dashboard/teacher_dashboard.html"
         context = {
             "user": request.user,
-            "total_students": 12,
-            "active_lessons": 5,
+            "total_students": Enrollment.objects.filter(
+                lesson__teacher=request.user
+            ).values("student").distinct().count(),
+            "active_lessons": Lesson.objects.filter(
+                teacher=request.user,
+                status="active"
+            ).count(),
             "average_rating": 4.8,
             "recent_activities": [
-                "A new student enrolled in your guitar class.",
-                "You received a 5-star rating from a student.",
-                "Your piano lesson schedule was updated.",
+                "A new student enrolled in your class.",
+                "You created a new lesson.",
+                "Your lesson activity was updated.",
             ],
         }
     else:
         template_name = "dashboard/student_dashboard.html"
+        wallet, _ = Wallet.objects.get_or_create(user=request.user)
         context = {
             "user": request.user,
-            "enrolled_classes": 3,
-            "coins": 120,
+            "enrolled_classes": Enrollment.objects.filter(student=request.user).count(),
+            "coins": wallet.balance,
             "unread_notifications": 4,
             "recent_activities": [
-                "Your English lesson starts tomorrow.",
-                "A teacher replied to your session request.",
-                "You earned 20 coins from an activity bonus.",
+                "You enrolled in a lesson.",
+                "A teacher published a new class.",
+                "Your wallet was updated.",
             ],
         }
 
     return render(request, template_name, context)
+
+
+@login_required
+def wallet_view(request):
+    wallet, _ = Wallet.objects.get_or_create(user=request.user)
+    transactions = CoinTransaction.objects.filter(user=request.user).order_by("-created_at")
+
+    return render(request, "dashboard/wallet.html", {
+        "user": request.user,
+        "wallet": wallet,
+        "transactions": transactions,
+    })
 
 
 @login_required

@@ -10,6 +10,7 @@ from .views import (
     create_lesson_view,
     browse_lessons_view,
     enroll_lesson_view,
+    wallet_view,
 )
 
 urlpatterns = [
@@ -23,4 +24,5 @@ urlpatterns = [
     path("lessons/create/", create_lesson_view, name="create_lesson"),
     path("browse-lessons/", browse_lessons_view, name="browse_lessons"),
     path("browse-lessons/<int:lesson_id>/enroll/", enroll_lesson_view, name="enroll_lesson"),
+    path("wallet/", wallet_view, name="wallet"),
 ]

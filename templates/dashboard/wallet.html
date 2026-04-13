@@ -1,0 +1,65 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Wallet | Skillvine</title>
+  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+<body>
+  <div class="dashboard-container">
+    <aside class="sidebar">
+      <h2 class="logo">Skillvine</h2>
+      <nav class="sidebar-nav">
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+        <a href="{% url 'profile' %}">Profile</a>
+
+        {% if user.role == "student" %}
+          <a href="{% url 'browse_lessons' %}">Browse Lessons</a>
+          <a href="{% url 'my_learning' %}">My Learning</a>
+        {% else %}
+          <a href="{% url 'my_students' %}">My Students</a>
+          <a href="{% url 'lessons' %}">Lessons</a>
+        {% endif %}
+
+        <a href="{% url 'wallet' %}" class="active">Wallet</a>
+        <a href="{% url 'notifications' %}">Notifications</a>
+        <a href="{% url 'settings' %}">Settings</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="topbar">
+        <h1>Wallet</h1>
+        <p class="role-badge">{{ user.role|title }}</p>
+      </div>
+
+      <section class="cards">
+        <div class="card">
+          <h3>Current Balance</h3>
+          <p>{{ wallet.balance }} coins</p>
+        </div>
+      </section>
+
+      <section class="dashboard-panel" style="margin-top: 24px;">
+        <h2>Transaction History</h2>
+
+        <div class="notification-list">
+          {% for tx in transactions %}
+            <div class="notification-card">
+              <div class="notification-header">
+                <h3>{{ tx.transaction_type|title }} - {{ tx.amount }} coins</h3>
+                <span class="notification-time">{{ tx.created_at|date:"M d, Y H:i" }}</span>
+              </div>
+              <p>{{ tx.description }}</p>
+            </div>
+          {% empty %}
+            <p style="margin-top:18px; color:#475569;">No transactions yet.</p>
+          {% endfor %}
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
