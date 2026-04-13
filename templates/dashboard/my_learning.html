@@ -27,11 +27,18 @@
       </div>
 
       <section class="dashboard-panel">
-        <h2>Learning Page</h2>
-        <p>
-          This is the My Learning page. Later, we can add enrolled classes,
-          ongoing sessions, completed lessons, and saved teachers here.
-        </p>
+        <h2>Enrolled Classes</h2>
+
+        <div class="lesson-grid">
+          {% for item in learning_items %}
+            <div class="lesson-card">
+              <h3>{{ item.title }}</h3>
+              <p><strong>Teacher:</strong> {{ item.teacher }}</p>
+              <p><strong>Schedule:</strong> {{ item.schedule }}</p>
+              <span class="lesson-status {{ item.status|lower }}">{{ item.status }}</span>
+            </div>
+          {% endfor %}
+        </div>
       </section>
     </main>
   </div>

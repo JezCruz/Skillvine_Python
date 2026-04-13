@@ -28,11 +28,18 @@
       </div>
 
       <section class="dashboard-panel">
-        <h2>Lessons Page</h2>
-        <p>
-          This is the Lessons page. Later, we can add created lessons,
-          schedules, lesson management, and teaching materials here.
-        </p>
+        <h2>Created Lessons</h2>
+
+        <div class="lesson-grid">
+          {% for item in lesson_items %}
+            <div class="lesson-card">
+              <h3>{{ item.title }}</h3>
+              <p><strong>Category:</strong> {{ item.category }}</p>
+              <p><strong>Students:</strong> {{ item.students }}</p>
+              <span class="lesson-status {{ item.status|lower }}">{{ item.status }}</span>
+            </div>
+          {% endfor %}
+        </div>
       </section>
     </main>
   </div>

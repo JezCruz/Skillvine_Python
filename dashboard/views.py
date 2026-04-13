@@ -60,11 +60,6 @@ def profile_view(request):
 
 
 @login_required
-def my_learning_view(request):
-    return render(request, "dashboard/my_learning.html", {"user": request.user})
-
-
-@login_required
 def notifications_view(request):
     if request.user.role == "teacher":
         template_name = "dashboard/teacher_notifications.html"
@@ -123,5 +118,58 @@ def my_students_view(request):
 
 
 @login_required
+def my_learning_view(request):
+    learning_items = [
+        {
+            "title": "English Speaking Basics",
+            "teacher": "Teacher Maria",
+            "schedule": "Mon & Wed • 10:00 AM",
+            "status": "Ongoing",
+        },
+        {
+            "title": "Beginner Guitar",
+            "teacher": "Teacher John",
+            "schedule": "Fri • 2:00 PM",
+            "status": "Upcoming",
+        },
+        {
+            "title": "Math Support Class",
+            "teacher": "Teacher Anne",
+            "schedule": "Sat • 9:00 AM",
+            "status": "Completed",
+        },
+    ]
+
+    return render(request, "dashboard/my_learning.html", {
+        "user": request.user,
+        "learning_items": learning_items,
+    })
+
+
+@login_required
 def lessons_view(request):
-    return render(request, "dashboard/lessons.html", {"user": request.user})
+    lesson_items = [
+        {
+            "title": "Beginner Guitar",
+            "category": "Music",
+            "students": 8,
+            "status": "Active",
+        },
+        {
+            "title": "Piano for Kids",
+            "category": "Music",
+            "students": 5,
+            "status": "Active",
+        },
+        {
+            "title": "Basic Fitness Training",
+            "category": "Wellness",
+            "students": 11,
+            "status": "Draft",
+        },
+    ]
+
+    return render(request, "dashboard/lessons.html", {
+        "user": request.user,
+        "lesson_items": lesson_items,
+    })
