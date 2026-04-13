@@ -114,7 +114,18 @@ def notifications_view(request):
 
 @login_required
 def my_students_view(request):
-    return render(request, "dashboard/my_students.html", {"user": request.user})
+    if request.user.role != "teacher":
+        messages.error(request, "Only teachers can access My Students.")
+        return redirect("dashboard")
+
+    enrollments = Enrollment.objects.filter(
+        lesson__teacher=request.user
+    ).select_related("student", "lesson").order_by("-created_at")
+
+    return render(request, "dashboard/my_students.html", {
+        "user": request.user,
+        "enrollments": enrollments,
+    })
 
 
 @login_required

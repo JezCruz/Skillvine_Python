@@ -28,11 +28,22 @@
       </div>
 
       <section class="dashboard-panel">
-        <h2>Students Page</h2>
-        <p>
-          This is the My Students page. Later, we can add student lists,
-          progress tracking, recent activity, and communication tools here.
-        </p>
+        <h2>Enrolled Students</h2>
+
+        <div class="lesson-grid">
+          {% for enrollment in enrollments %}
+            <div class="lesson-card">
+              <h3>{{ enrollment.student.full_name|default:enrollment.student.username }}</h3>
+              <p><strong>Email:</strong> {{ enrollment.student.email }}</p>
+              <p><strong>Lesson:</strong> {{ enrollment.lesson.title }}</p>
+              <p><strong>Status:</strong> {{ enrollment.status|title }}</p>
+              <p><strong>Enrolled:</strong> {{ enrollment.created_at|date:"M d, Y" }}</p>
+              <span class="lesson-status {{ enrollment.status|lower }}">{{ enrollment.status|title }}</span>
+            </div>
+          {% empty %}
+            <p style="margin-top:18px; color:#475569;">No students enrolled yet.</p>
+          {% endfor %}
+        </div>
       </section>
     </main>
   </div>
