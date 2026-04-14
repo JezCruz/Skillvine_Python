@@ -37,86 +37,10 @@ def staff_dashboard(request):
         "user_growth_data": [2, 4, 6, 7, 10, 12, 15],
         "sales_labels": ["Jan", "Feb", "Mar", "Apr"],
         "sales_data": [0, 0, 0, 0],
-        "coins_labels": ["Earned", "Spent", "Held"],
+        "coins_labels": ["Credit", "Debit", "Balance"],
         "coins_data": [0, 0, total_coins],
     }
     return render(request, "staff/dashboard.html", context)
-
-
-@login_required
-@staff_required
-def staff_coins(request):
-    wallets = Wallet.objects.select_related("user").order_by("-balance", "user__username")
-    transactions = CoinTransaction.objects.all().order_by("-created_at")[:20]
-
-    total_coins = wallets.aggregate(total=Sum("balance"))["total"] or 0
-
-    context = {
-        "wallets": wallets,
-        "transactions": transactions,
-        "total_coins": total_coins,
-    }
-    return render(request, "staff/coins.html", context)
-
-
-@login_required
-@staff_required
-def adjust_user_coins(request, user_id):
-    if request.method != "POST":
-        return redirect("staff_coins")
-
-    user = get_object_or_404(User, id=user_id)
-    wallet, _ = Wallet.objects.get_or_create(user=user)
-
-    action = request.POST.get("action", "").strip()
-    amount_raw = request.POST.get("amount", "").strip()
-    note = request.POST.get("note", "").strip()
-
-    if not amount_raw.isdigit():
-        messages.error(request, "Amount must be a valid whole number.")
-        return redirect("staff_coins")
-
-    amount = int(amount_raw)
-
-    if amount <= 0:
-        messages.error(request, "Amount must be greater than zero.")
-        return redirect("staff_coins")
-
-    if action == "credit":
-        wallet.balance += amount
-        wallet.save()
-
-        CoinTransaction.objects.create(
-            wallet=wallet,
-            amount=amount,
-            transaction_type="credit",
-            note=note,
-            created_by=request.user,
-        )
-
-        messages.success(request, f"Added {amount} coins to {user.username}.")
-
-    elif action == "debit":
-        if wallet.balance < amount:
-            messages.error(request, f"{user.username} does not have enough coins.")
-            return redirect("staff_coins")
-
-        wallet.balance -= amount
-        wallet.save()
-
-        CoinTransaction.objects.create(
-            wallet=wallet,
-            amount=amount,
-            transaction_type="debit",
-            note=note,
-            created_by=request.user,
-        )
-
-        messages.success(request, f"Removed {amount} coins from {user.username}.")
-    else:
-        messages.error(request, "Invalid action.")
-
-    return redirect("staff_coins")
 
 
 @login_required
@@ -148,8 +72,8 @@ def staff_users(request):
         "role": role,
         "status": status,
     }
-
     return render(request, "staff/users.html", context)
+
 
 @login_required
 @staff_required
@@ -183,7 +107,6 @@ def remove_user_staff(request, user_id):
     return redirect("staff_users")
 
 
-
 @login_required
 @staff_required
 def deactivate_user(request, user_id):
@@ -205,6 +128,10 @@ def deactivate_user(request, user_id):
 def reactivate_user(request, user_id):
     user = get_object_or_404(User, id=user_id)
 
+    if request.user.id == user.id:
+        messages.error(request, "You cannot reactivate yourself here.")
+        return redirect("staff_users")
+
     user.is_active = True
     user.save()
 
@@ -220,7 +147,6 @@ def staff_reports(request):
     context = {
         "reports": reports,
     }
-
     return render(request, "staff/reports.html", context)
 
 
@@ -234,3 +160,82 @@ def resolve_report(request, report_id):
 
     messages.success(request, "Report marked as resolved.")
     return redirect("staff_reports")
+
+
+@login_required
+@staff_required
+def staff_coins(request):
+    wallets = Wallet.objects.select_related("user").order_by("-balance", "user__username")
+    transactions = CoinTransaction.objects.select_related("user").order_by("-created_at")[:20]
+
+    total_coins = wallets.aggregate(total=Sum("balance"))["total"] or 0
+    total_credits = CoinTransaction.objects.filter(transaction_type="credit").aggregate(total=Sum("amount"))["total"] or 0
+    total_debits = CoinTransaction.objects.filter(transaction_type="debit").aggregate(total=Sum("amount"))["total"] or 0
+
+    context = {
+        "wallets": wallets,
+        "transactions": transactions,
+        "total_coins": total_coins,
+        "total_credits": total_credits,
+        "total_debits": total_debits,
+    }
+    return render(request, "staff/coins.html", context)
+
+
+@login_required
+@staff_required
+def adjust_user_coins(request, user_id):
+    if request.method != "POST":
+        return redirect("staff_coins")
+
+    user = get_object_or_404(User, id=user_id)
+    wallet, _ = Wallet.objects.get_or_create(user=user)
+
+    action = request.POST.get("action", "").strip()
+    amount_raw = request.POST.get("amount", "").strip()
+    note = request.POST.get("note", "").strip()
+
+    if not amount_raw.isdigit():
+        messages.error(request, "Amount must be a valid whole number.")
+        return redirect("staff_coins")
+
+    amount = int(amount_raw)
+
+    if amount <= 0:
+        messages.error(request, "Amount must be greater than zero.")
+        return redirect("staff_coins")
+
+    if action == "credit":
+        wallet.balance += amount
+        wallet.save()
+
+        CoinTransaction.objects.create(
+            user=user,
+            transaction_type="credit",
+            amount=amount,
+            description=note or "Manual credit by staff",
+        )
+
+        messages.success(request, f"Added {amount} coins to {user.username}.")
+
+    elif action == "debit":
+        if wallet.balance < amount:
+            messages.error(request, f"{user.username} does not have enough coins.")
+            return redirect("staff_coins")
+
+        wallet.balance -= amount
+        wallet.save()
+
+        CoinTransaction.objects.create(
+            user=user,
+            transaction_type="debit",
+            amount=amount,
+            description=note or "Manual debit by staff",
+        )
+
+        messages.success(request, f"Removed {amount} coins from {user.username}.")
+
+    else:
+        messages.error(request, "Invalid action.")
+
+    return redirect("staff_coins")

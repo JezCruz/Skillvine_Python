@@ -108,7 +108,7 @@
                         <tbody>
                             {% for tx in transactions %}
                             <tr>
-                                <td>{{ tx.wallet.user.username }}</td>
+                                <td>{{ tx.user.username }}</td>
                                 <td>
                                     {% if tx.transaction_type == "credit" %}
                                         <span class="badge badge-active">Credit</span>
@@ -117,14 +117,8 @@
                                     {% endif %}
                                 </td>
                                 <td>{{ tx.amount }}</td>
-                                <td>{{ tx.note|default:"—" }}</td>
-                                <td>
-                                    {% if tx.created_by %}
-                                        {{ tx.created_by.username }}
-                                    {% else %}
-                                        —
-                                    {% endif %}
-                                </td>
+                                <td>{{ tx.description|default:"—" }}</td>
+                                <td>Staff</td>
                                 <td>{{ tx.created_at|date:"M d, Y H:i" }}</td>
                             </tr>
                             {% empty %}
