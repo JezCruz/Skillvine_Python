@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from django.db.models import Q
+from .models import Report
 
 from .decorators import staff_required
 
@@ -141,3 +142,26 @@ def reactivate_user(request, user_id):
 
     messages.success(request, f"{user.username} has been reactivated.")
     return redirect("staff_users")
+
+
+@login_required
+@staff_required
+def staff_reports(request):
+    reports = Report.objects.select_related("reporter", "reported_user").order_by("-created_at")
+
+    context = {
+        "reports": reports,
+    }
+    return render(request, "staff/reports.html", context)
+
+
+@login_required
+@staff_required
+def resolve_report(request, report_id):
+    report = get_object_or_404(Report, id=report_id)
+
+    report.status = "resolved"
+    report.save()
+
+    messages.success(request, "Report marked as resolved.")
+    return redirect("staff_reports")

@@ -1,0 +1,84 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reports</title>
+    <link rel="stylesheet" href="{% static 'css/staff.css' %}">
+</head>
+<body>
+
+<div class="staff-layout">
+    <aside class="sidebar">
+        <div class="brand">Skillvine Staff</div>
+        <nav>
+            <a href="{% url 'staff_dashboard' %}">Overview</a>
+            <a href="{% url 'staff_users' %}">Users</a>
+            <a href="{% url 'staff_reports' %}" class="active">Reports</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <h1>Reports</h1>
+
+        {% if messages %}
+            <div class="toast-container">
+                {% for message in messages %}
+                    <div class="toast toast-success">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="panel-card">
+            <table class="users-table">
+                <thead>
+                    <tr>
+                        <th>Reporter</th>
+                        <th>Reported User</th>
+                        <th>Reason</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for report in reports %}
+                    <tr>
+                        <td>{{ report.reporter.username }}</td>
+                        <td>{{ report.reported_user.username }}</td>
+                        <td>{{ report.reason }}</td>
+
+                        <td>
+                            {% if report.status == "pending" %}
+                                <span class="badge badge-warning">Pending</span>
+                            {% else %}
+                                <span class="badge badge-active">Resolved</span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if report.status == "pending" %}
+                                <a href="{% url 'resolve_report' report.id %}"
+                                   class="btn btn-sm btn-success"
+                                   onclick="return confirm('Resolve this report?')">
+                                   Resolve
+                                </a>
+                            {% else %}
+                                <span class="badge badge-muted">Done</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5">No reports found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+
+</body>
+</html>

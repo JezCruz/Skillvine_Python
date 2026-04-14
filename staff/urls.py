@@ -6,6 +6,8 @@ from .views import (
     remove_user_staff,
     deactivate_user,
     reactivate_user,
+    staff_reports,
+    resolve_report,
 )
 
 urlpatterns = [
@@ -15,4 +17,6 @@ urlpatterns = [
     path("users/<int:user_id>/remove-staff/", remove_user_staff, name="remove_user_staff"),
     path("users/<int:user_id>/deactivate/", deactivate_user, name="deactivate_user"),
     path("users/<int:user_id>/reactivate/", reactivate_user, name="reactivate_user"),
+    path("reports/", staff_reports, name="staff_reports"),
+    path("reports/<int:report_id>/resolve/", resolve_report, name="resolve_report"),
 ]
