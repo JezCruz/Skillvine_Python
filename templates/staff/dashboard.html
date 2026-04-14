@@ -1,0 +1,141 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skillvine Staff Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/staff.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="staff-layout">
+        <aside class="sidebar">
+            <div class="brand">Skillvine Staff</div>
+            <nav>
+                <a href="{% url 'staff_dashboard' %}" class="active">Overview</a>
+                <a href="#">Users</a>
+                <a href="#">Sales</a>
+                <a href="#">Coins</a>
+                <a href="#">Reports</a>
+                <a href="#">Assets</a>
+                <a href="#">System</a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <div>
+                    <h1>Manager Tools</h1>
+                    <p>Internal monitoring and control panel</p>
+                </div>
+                <div class="top-actions">
+                    <span class="staff-badge">Staff</span>
+                </div>
+            </header>
+
+            <section class="stats-grid">
+                <div class="stat-card">
+                    <h3>Total Users</h3>
+                    <p>{{ total_users }}</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Students</h3>
+                    <p>{{ total_students }}</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Teachers</h3>
+                    <p>{{ total_teachers }}</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Staff</h3>
+                    <p>{{ total_staff }}</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Sales</h3>
+                    <p>{{ total_sales }}</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Coins</h3>
+                    <p>{{ total_coins }}</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Open Reports</h3>
+                    <p>{{ open_reports }}</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Assets</h3>
+                    <p>{{ system_assets }}</p>
+                </div>
+            </section>
+
+            <section class="charts-grid">
+                <div class="chart-card">
+                    <h3>User Growth</h3>
+                    <canvas id="userGrowthChart"></canvas>
+                </div>
+
+                <div class="chart-card">
+                    <h3>Sales</h3>
+                    <canvas id="salesChart"></canvas>
+                </div>
+
+                <div class="chart-card full">
+                    <h3>Coins Overview</h3>
+                    <canvas id="coinsChart"></canvas>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    {{ user_growth_labels|json_script:"user-growth-labels" }}
+    {{ user_growth_data|json_script:"user-growth-data" }}
+    {{ sales_labels|json_script:"sales-labels" }}
+    {{ sales_data|json_script:"sales-data" }}
+    {{ coins_labels|json_script:"coins-labels" }}
+    {{ coins_data|json_script:"coins-data" }}
+
+    <script>
+        const userGrowthLabels = JSON.parse(document.getElementById("user-growth-labels").textContent);
+        const userGrowthData = JSON.parse(document.getElementById("user-growth-data").textContent);
+        const salesLabels = JSON.parse(document.getElementById("sales-labels").textContent);
+        const salesData = JSON.parse(document.getElementById("sales-data").textContent);
+        const coinsLabels = JSON.parse(document.getElementById("coins-labels").textContent);
+        const coinsData = JSON.parse(document.getElementById("coins-data").textContent);
+
+        new Chart(document.getElementById("userGrowthChart"), {
+            type: "line",
+            data: {
+                labels: userGrowthLabels,
+                datasets: [{
+                    label: "Users",
+                    data: userGrowthData,
+                    tension: 0.3
+                }]
+            }
+        });
+
+        new Chart(document.getElementById("salesChart"), {
+            type: "bar",
+            data: {
+                labels: salesLabels,
+                datasets: [{
+                    label: "Sales",
+                    data: salesData
+                }]
+            }
+        });
+
+        new Chart(document.getElementById("coinsChart"), {
+            type: "doughnut",
+            data: {
+                labels: coinsLabels,
+                datasets: [{
+                    label: "Coins",
+                    data: coinsData
+                }]
+            }
+        });
+    </script>
+</body>
+</html>
