@@ -129,29 +129,29 @@
                                         <div class="action-group">
                                             {% if not user.is_staff %}
                                                 <a href="{% url 'make_user_staff' user.id %}"
-                                                   class="btn btn-sm btn-outline"
-                                                   onclick="return confirmAction('Make {{ user.username }} a staff member?')">
-                                                   Make Staff
+                                                class="btn btn-sm btn-outline"
+                                                onclick="openConfirmModal(event, 'Make Staff', 'Make {{ user.username }} a staff member?', this.href, 'primary')">
+                                                Make Staff
                                                 </a>
                                             {% else %}
                                                 <a href="{% url 'remove_user_staff' user.id %}"
-                                                   class="btn btn-sm btn-warning"
-                                                   onclick="return confirmAction('Remove staff access from {{ user.username }}?')">
-                                                   Remove Staff
+                                                class="btn btn-sm btn-warning"
+                                                onclick="openConfirmModal(event, 'Remove Staff', 'Remove staff access from {{ user.username }}?', this.href, 'warning')">
+                                                Remove Staff
                                                 </a>
                                             {% endif %}
 
                                             {% if user.is_active %}
                                                 <a href="{% url 'deactivate_user' user.id %}"
-                                                   class="btn btn-sm btn-danger"
-                                                   onclick="return confirmAction('Deactivate {{ user.username }}?')">
-                                                   Deactivate
+                                                class="btn btn-sm btn-danger"
+                                                onclick="openConfirmModal(event, 'Deactivate User', 'Deactivate {{ user.username }}?', this.href, 'danger')">
+                                                Deactivate
                                                 </a>
                                             {% else %}
                                                 <a href="{% url 'reactivate_user' user.id %}"
-                                                   class="btn btn-sm btn-success"
-                                                   onclick="return confirmAction('Reactivate {{ user.username }}?')">
-                                                   Reactivate
+                                                class="btn btn-sm btn-success"
+                                                onclick="openConfirmModal(event, 'Reactivate User', 'Reactivate {{ user.username }}?', this.href, 'success')">
+                                                Reactivate
                                                 </a>
                                             {% endif %}
                                         </div>
@@ -172,10 +172,74 @@
         </main>
     </div>
 
+    <div id="confirmModal" class="modal-overlay">
+        <div class="confirm-modal">
+            <div class="confirm-modal-header">
+                <h3 id="confirmModalTitle">Confirm Action</h3>
+                <button type="button" class="modal-close" onclick="closeConfirmModal()">×</button>
+            </div>
+
+            <div class="confirm-modal-body">
+                <p id="confirmModalMessage">Are you sure you want to continue?</p>
+            </div>
+
+            <div class="confirm-modal-actions">
+                <button type="button" class="btn btn-secondary" onclick="closeConfirmModal()">
+                    Cancel
+                </button>
+                <a id="confirmModalBtn" href="#" class="btn btn-danger">
+                    Confirm
+                </a>
+            </div>
+        </div>
+    </div>
+
     <script>
-        function confirmAction(message) {
-            return window.confirm(message);
+        function openConfirmModal(event, title, message, url, type) {
+            event.preventDefault();
+
+            const modal = document.getElementById("confirmModal");
+            const modalTitle = document.getElementById("confirmModalTitle");
+            const modalMessage = document.getElementById("confirmModalMessage");
+            const confirmBtn = document.getElementById("confirmModalBtn");
+
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            confirmBtn.href = url;
+
+            confirmBtn.className = "btn";
+            if (type === "danger") {
+                confirmBtn.classList.add("btn-danger");
+            } else if (type === "warning") {
+                confirmBtn.classList.add("btn-warning");
+            } else if (type === "success") {
+                confirmBtn.classList.add("btn-success");
+            } else {
+                confirmBtn.classList.add("btn-primary");
+            }
+
+            modal.classList.add("show");
+            document.body.classList.add("modal-open");
         }
+
+        function closeConfirmModal() {
+            const modal = document.getElementById("confirmModal");
+            modal.classList.remove("show");
+            document.body.classList.remove("modal-open");
+        }
+
+        window.addEventListener("click", function(event) {
+            const modal = document.getElementById("confirmModal");
+            if (event.target === modal) {
+                closeConfirmModal();
+            }
+        });
+
+        window.addEventListener("keydown", function(event) {
+            if (event.key === "Escape") {
+                closeConfirmModal();
+            }
+        });
 
         function closeToast(button) {
             const toast = button.parentElement;
