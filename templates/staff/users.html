@@ -9,6 +9,15 @@
 
 <div class="main-content">
     <h1>User Management</h1>
+    {% if messages %}
+        <div style="margin-bottom: 20px;">
+            {% for message in messages %}
+                <div style="padding: 10px 14px; margin-bottom: 10px; border-radius: 8px; background: #eef4ff;">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
 
     <!-- Search + Filter -->
     <form method="get" style="margin-bottom: 20px;">
@@ -30,6 +39,7 @@
             <th>Email</th>
             <th>Role</th>
             <th>Staff</th>
+            <th>Active</th>
             <th>Action</th>
         </tr>
 
@@ -39,11 +49,22 @@
             <td>{{ user.email }}</td>
             <td>{{ user.role }}</td>
             <td>{{ user.is_staff }}</td>
+            <td>{{ user.is_active }}</td>
             <td>
-                {% if not user.is_staff %}
-                    <a href="#">Make Staff</a>
+                {% if user != request.user %}
+                    {% if not user.is_staff %}
+                        <a href="{% url 'make_user_staff' user.id %}">Make Staff</a>
+                    {% else %}
+                        <a href="{% url 'remove_user_staff' user.id %}">Remove Staff</a>
+                    {% endif %}
+
+                    {% if user.is_active %}
+                        | <a href="{% url 'deactivate_user' user.id %}">Deactivate</a>
+                    {% else %}
+                        | <span>Inactive</span>
+                    {% endif %}
                 {% else %}
-                    <a href="#">Remove Staff</a>
+                    <span>You</span>
                 {% endif %}
             </td>
         </tr>

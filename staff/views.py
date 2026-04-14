@@ -1,6 +1,7 @@
+from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, redirect, render
 
 from .decorators import staff_required
 
@@ -44,6 +45,8 @@ def staff_dashboard(request):
     return render(request, "staff/dashboard.html", context)
 
 
+@login_required
+@staff_required
 def staff_users(request):
     query = request.GET.get("q", "")
     role = request.GET.get("role", "")
@@ -63,3 +66,51 @@ def staff_users(request):
     }
 
     return render(request, "staff/users.html", context)
+
+
+@login_required
+@staff_required
+def make_user_staff(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+
+    if request.user.id == user.id:
+        messages.error(request, "You cannot change your own staff status here.")
+        return redirect("staff_users")
+
+    user.is_staff = True
+    user.save()
+
+    messages.success(request, f"{user.username} is now a staff member.")
+    return redirect("staff_users")
+
+
+@login_required
+@staff_required
+def remove_user_staff(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+
+    if request.user.id == user.id:
+        messages.error(request, "You cannot remove your own staff access here.")
+        return redirect("staff_users")
+
+    user.is_staff = False
+    user.save()
+
+    messages.success(request, f"{user.username} was removed from staff.")
+    return redirect("staff_users")
+
+
+@login_required
+@staff_required
+def deactivate_user(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+
+    if request.user.id == user.id:
+        messages.error(request, "You cannot deactivate your own account here.")
+        return redirect("staff_users")
+
+    user.is_active = False
+    user.save()
+
+    messages.success(request, f"{user.username} has been deactivated.")
+    return redirect("staff_users")
