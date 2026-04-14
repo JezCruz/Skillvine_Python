@@ -11,6 +11,9 @@ from .views import (
     browse_lessons_view,
     enroll_lesson_view,
     wallet_view,
+    search_view,
+    teacher_profile_popup_view,
+    toggle_follow_teacher_view,
 )
 
 urlpatterns = [
@@ -25,4 +28,7 @@ urlpatterns = [
     path("browse-lessons/", browse_lessons_view, name="browse_lessons"),
     path("browse-lessons/<int:lesson_id>/enroll/", enroll_lesson_view, name="enroll_lesson"),
     path("wallet/", wallet_view, name="wallet"),
+    path("search/", search_view, name="search"),
+    path("teachers/<int:teacher_id>/popup/", teacher_profile_popup_view, name="teacher_profile_popup"),
+    path("teachers/<int:teacher_id>/follow/", toggle_follow_teacher_view, name="toggle_follow_teacher"),
 ]

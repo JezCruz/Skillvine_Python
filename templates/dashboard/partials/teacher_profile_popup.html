@@ -1,0 +1,38 @@
+<div class="teacher-popup">
+  <h2>{{ teacher.full_name|default:teacher.username }}</h2>
+  <p><strong>Role:</strong> Teacher</p>
+  <p><strong>Followers:</strong> {{ followers_count }}</p>
+  <p><strong>Email:</strong> {{ teacher.email }}</p>
+
+  {% if user.is_authenticated and user.role == "student" %}
+    <form method="post" action="{% url 'toggle_follow_teacher' teacher.id %}" style="margin-top:16px;">
+      {% csrf_token %}
+      {% if is_following %}
+        <button type="submit" class="save-btn" style="background:#475569;">Following</button>
+      {% else %}
+        <button type="submit" class="save-btn">Follow</button>
+      {% endif %}
+    </form>
+  {% endif %}
+
+  <div style="margin-top: 24px;">
+    <h3>Active Lessons</h3>
+
+    <div class="notification-list">
+      {% for lesson in lessons %}
+        <div class="notification-card">
+          <div class="notification-header">
+            <h3>{{ lesson.title }}</h3>
+            <span class="notification-time">{{ lesson.price_coins }} coins</span>
+          </div>
+          <p><strong>Category:</strong> {{ lesson.get_category_display }}</p>
+          {% if lesson.description %}
+            <p>{{ lesson.description }}</p>
+          {% endif %}
+        </div>
+      {% empty %}
+        <p style="margin-top:14px; color:#475569;">No active lessons yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>

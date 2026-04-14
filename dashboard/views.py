@@ -1,7 +1,10 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.shortcuts import render, redirect
-from .models import Lesson, Enrollment, Wallet, CoinTransaction
+from django.shortcuts import get_object_or_404, redirect, render
+from .models import Lesson, Enrollment, Wallet, CoinTransaction, Follow
+from django.db.models import Q, Count
+from django.http import HttpResponseForbidden
+from users.models import User
 
 
 def adjust_wallet(user, transaction_type, amount, description):
@@ -306,3 +309,93 @@ def enroll_lesson_view(request, lesson_id):
         f"You enrolled in '{lesson.title}' successfully for {lesson.price_coins} coins."
     )
     return redirect("browse_lessons")  
+
+
+@login_required
+def search_view(request):
+    query = request.GET.get("q", "").strip()
+
+    teacher_results = User.objects.filter(role="teacher")
+    lesson_results = Lesson.objects.filter(status="active").select_related("teacher")
+
+    if query:
+        teacher_results = teacher_results.filter(
+            Q(full_name__icontains=query) |
+            Q(username__icontains=query) |
+            Q(email__icontains=query)
+        )
+
+        lesson_results = lesson_results.filter(
+            Q(title__icontains=query) |
+            Q(category__icontains=query) |
+            Q(description__icontains=query) |
+            Q(teacher__full_name__icontains=query) |
+            Q(teacher__username__icontains=query)
+        )
+
+    teacher_results = teacher_results.annotate(
+        followers_count=Count("teacher_followers", distinct=True),
+        lessons_count=Count("lessons", distinct=True),
+    ).order_by("-id")
+
+    followed_teacher_ids = set()
+    if request.user.role == "student":
+        followed_teacher_ids = set(
+            Follow.objects.filter(follower=request.user).values_list("teacher_id", flat=True)
+        )
+
+    return render(request, "dashboard/search.html", {
+        "user": request.user,
+        "query": query,
+        "teacher_results": teacher_results,
+        "lesson_results": lesson_results,
+        "followed_teacher_ids": followed_teacher_ids,
+    })
+
+
+@login_required
+def teacher_profile_popup_view(request, teacher_id):
+    teacher = get_object_or_404(User, id=teacher_id, role="teacher")
+
+    lessons = Lesson.objects.filter(teacher=teacher, status="active").order_by("-created_at")
+    followers_count = Follow.objects.filter(teacher=teacher).count()
+    is_following = False
+
+    if request.user.is_authenticated and request.user.role == "student":
+        is_following = Follow.objects.filter(
+            follower=request.user,
+            teacher=teacher
+        ).exists()
+
+    return render(request, "dashboard/partials/teacher_profile_popup.html", {
+        "teacher": teacher,
+        "lessons": lessons,
+        "followers_count": followers_count,
+        "is_following": is_following,
+    })
+
+
+@login_required
+def toggle_follow_teacher_view(request, teacher_id):
+    if request.user.role != "student":
+        return HttpResponseForbidden("Only students can follow teachers.")
+
+    if request.method != "POST":
+        return redirect("search")
+
+    teacher = get_object_or_404(User, id=teacher_id, role="teacher")
+
+    if teacher.id == request.user.id:
+        messages.error(request, "You cannot follow yourself.")
+        return redirect("search")
+
+    follow = Follow.objects.filter(follower=request.user, teacher=teacher).first()
+
+    if follow:
+        follow.delete()
+        messages.success(request, f"You unfollowed {teacher.full_name or teacher.username}.")
+    else:
+        Follow.objects.create(follower=request.user, teacher=teacher)
+        messages.success(request, f"You followed {teacher.full_name or teacher.username}.")
+
+    return redirect("search")

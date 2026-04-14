@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Lesson, Enrollment, Wallet, CoinTransaction
+from .models import Lesson, Enrollment, Wallet, CoinTransaction, Follow
 
 admin.site.site_header = "Skillvine Admin"
 admin.site.site_title = "Skillvine Admin Portal"
@@ -49,4 +49,11 @@ class CoinTransactionAdmin(admin.ModelAdmin):
     list_display = ("id", "user", "transaction_type", "amount", "description", "created_at")
     list_filter = ("transaction_type", "created_at")
     search_fields = ("user__email", "user__full_name", "description")
+    ordering = ("-created_at",)
+
+
+@admin.register(Follow)
+class FollowAdmin(admin.ModelAdmin):
+    list_display = ("id", "follower", "teacher", "created_at")
+    search_fields = ("follower__email", "follower__full_name", "teacher__email", "teacher__full_name")
     ordering = ("-created_at",)

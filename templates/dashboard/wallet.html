@@ -14,7 +14,8 @@
       <nav class="sidebar-nav">
         <a href="{% url 'dashboard' %}">Dashboard</a>
         <a href="{% url 'profile' %}">Profile</a>
-
+        <a href="{% url 'search' %}">Search</a>
+        
         {% if user.role == "student" %}
           <a href="{% url 'browse_lessons' %}">Browse Lessons</a>
           <a href="{% url 'my_learning' %}">My Learning</a>

@@ -1,0 +1,136 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Search | Skillvine</title>
+  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+<body>
+  <div class="dashboard-container">
+    <aside class="sidebar">
+      <h2 class="logo">Skillvine</h2>
+
+      <nav class="sidebar-nav">
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+        <a href="{% url 'profile' %}">Profile</a>
+
+        {% if user.role == "student" %}
+          <a href="{% url 'search' %}" class="active">Search</a>
+          <a href="{% url 'browse_lessons' %}">Browse Lessons</a>
+          <a href="{% url 'my_learning' %}">My Learning</a>
+        {% else %}
+          <a href="{% url 'search' %}" class="active">Search</a>
+          <a href="{% url 'my_students' %}">My Students</a>
+          <a href="{% url 'lessons' %}">Lessons</a>
+        {% endif %}
+
+        <a href="{% url 'wallet' %}">Wallet</a>
+        <a href="{% url 'notifications' %}">Notifications</a>
+        <a href="{% url 'settings' %}">Settings</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="topbar">
+        <h1>Search</h1>
+        <p class="role-badge">{{ user.role|title }}</p>
+      </div>
+
+      {% if messages %}
+        {% for message in messages %}
+          <div class="flash-message {{ message.tags }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <section class="dashboard-panel">
+        <h2>Search People or Subjects</h2>
+
+        <form method="get" class="profile-form" style="max-width: 700px;">
+          <label for="q">Search</label>
+          <input
+            type="text"
+            id="q"
+            name="q"
+            value="{{ query }}"
+            placeholder="Search teacher name, subject, lesson, category..."
+          >
+          <button type="submit" class="save-btn">Search</button>
+        </form>
+      </section>
+
+      <section class="dashboard-panel" style="margin-top: 24px;">
+        <h2>Teachers</h2>
+
+        <div class="lesson-grid">
+          {% for teacher in teacher_results %}
+            <div class="lesson-card">
+              <h3>{{ teacher.full_name|default:teacher.username }}</h3>
+              <p><strong>Role:</strong> Teacher</p>
+              <p><strong>Followers:</strong> {{ teacher.followers_count }}</p>
+              <p><strong>Active Lessons:</strong> {{ teacher.lessons_count }}</p>
+
+              <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:16px;">
+                <button
+                  type="button"
+                  class="save-btn open-profile-modal"
+                  data-url="{% url 'teacher_profile_popup' teacher.id %}"
+                >
+                  View Profile
+                </button>
+
+                {% if user.role == "student" %}
+                  <form method="post" action="{% url 'toggle_follow_teacher' teacher.id %}">
+                    {% csrf_token %}
+                    {% if teacher.id in followed_teacher_ids %}
+                      <button type="submit" class="save-btn" style="background:#475569;">Following</button>
+                    {% else %}
+                      <button type="submit" class="save-btn">Follow</button>
+                    {% endif %}
+                  </form>
+                {% endif %}
+              </div>
+            </div>
+          {% empty %}
+            <p style="margin-top:18px; color:#475569;">No teachers found.</p>
+          {% endfor %}
+        </div>
+      </section>
+
+      <section class="dashboard-panel" style="margin-top: 24px;">
+        <h2>Lessons</h2>
+
+        <div class="lesson-grid">
+          {% for lesson in lesson_results %}
+            <div class="lesson-card">
+              <h3>{{ lesson.title }}</h3>
+              <p><strong>Teacher:</strong> {{ lesson.teacher.full_name|default:lesson.teacher.username }}</p>
+              <p><strong>Category:</strong> {{ lesson.get_category_display }}</p>
+              <p><strong>Price:</strong> {{ lesson.price_coins }} coins</p>
+              {% if lesson.description %}
+                <p><strong>Description:</strong> {{ lesson.description }}</p>
+              {% endif %}
+            </div>
+          {% empty %}
+            <p style="margin-top:18px; color:#475569;">No lessons found.</p>
+          {% endfor %}
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="teacherProfileModal" class="sv-modal">
+    <div class="sv-modal-content">
+      <button type="button" class="sv-modal-close" id="closeTeacherProfileModal">&times;</button>
+      <div id="teacherProfileModalBody">
+        <p>Loading...</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="{% static 'js/search_modal.js' %}"></script>
+</body>
+</html>
