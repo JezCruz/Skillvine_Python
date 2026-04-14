@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
+from django.db.models import Q
 
 from .decorators import staff_required
 
@@ -48,21 +49,31 @@ def staff_dashboard(request):
 @login_required
 @staff_required
 def staff_users(request):
-    query = request.GET.get("q", "")
-    role = request.GET.get("role", "")
+    query = request.GET.get("q", "").strip()
+    role = request.GET.get("role", "").strip()
+    status = request.GET.get("status", "").strip()
 
-    users = User.objects.all()
+    users = User.objects.all().order_by("-date_joined")
 
     if query:
-        users = users.filter(username__icontains=query)
+        users = users.filter(
+            Q(username__icontains=query) |
+            Q(email__icontains=query)
+        )
 
     if role:
         users = users.filter(role=role)
+
+    if status == "active":
+        users = users.filter(is_active=True)
+    elif status == "inactive":
+        users = users.filter(is_active=False)
 
     context = {
         "users": users,
         "query": query,
         "role": role,
+        "status": status,
     }
 
     return render(request, "staff/users.html", context)
@@ -113,4 +124,20 @@ def deactivate_user(request, user_id):
     user.save()
 
     messages.success(request, f"{user.username} has been deactivated.")
+    return redirect("staff_users")
+
+
+@login_required
+@staff_required
+def reactivate_user(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+
+    if request.user.id == user.id:
+        messages.error(request, "You cannot reactivate your own account here.")
+        return redirect("staff_users")
+
+    user.is_active = True
+    user.save()
+
+    messages.success(request, f"{user.username} has been reactivated.")
     return redirect("staff_users")

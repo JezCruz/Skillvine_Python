@@ -5,6 +5,7 @@ from .views import (
     make_user_staff,
     remove_user_staff,
     deactivate_user,
+    reactivate_user,
 )
 
 urlpatterns = [
@@ -13,4 +14,5 @@ urlpatterns = [
     path("users/<int:user_id>/make-staff/", make_user_staff, name="make_user_staff"),
     path("users/<int:user_id>/remove-staff/", remove_user_staff, name="remove_user_staff"),
     path("users/<int:user_id>/deactivate/", deactivate_user, name="deactivate_user"),
+    path("users/<int:user_id>/reactivate/", reactivate_user, name="reactivate_user"),
 ]
