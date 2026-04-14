@@ -1,4 +1,5 @@
 from django.urls import path
+from django.urls import path
 from .views import (
     staff_dashboard,
     staff_users,
@@ -7,6 +8,9 @@ from .views import (
     deactivate_user,
     reactivate_user,
     staff_reports,
+    resolve_report,
+    staff_coins,
+    adjust_user_coins,
     resolve_report,
 )
 
@@ -19,4 +23,6 @@ urlpatterns = [
     path("users/<int:user_id>/reactivate/", reactivate_user, name="reactivate_user"),
     path("reports/", staff_reports, name="staff_reports"),
     path("reports/<int:report_id>/resolve/", resolve_report, name="resolve_report"),
+    path("coins/", staff_coins, name="staff_coins"),
+    path("coins/<int:user_id>/adjust/", adjust_user_coins, name="adjust_user_coins"),
 ]

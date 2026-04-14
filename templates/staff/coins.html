@@ -1,0 +1,161 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Coins</title>
+    <link rel="stylesheet" href="{% static 'css/staff.css' %}">
+</head>
+<body>
+    <div class="staff-layout">
+        <aside class="sidebar">
+            <div class="brand">Skillvine Staff</div>
+            <nav>
+                <a href="{% url 'staff_dashboard' %}">Overview</a>
+                <a href="{% url 'staff_users' %}">Users</a>
+                <a href="{% url 'staff_coins' %}" class="active">Coins</a>
+                <a href="{% url 'staff_reports' %}">Reports</a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <div>
+                    <h1>Coin Management</h1>
+                    <p>Monitor wallet balances and adjust user coins</p>
+                </div>
+                <div class="top-actions">
+                    <span class="staff-badge">Total Coins: {{ total_coins }}</span>
+                </div>
+            </header>
+
+            {% if messages %}
+                <div class="toast-container">
+                    {% for message in messages %}
+                        <div class="toast toast-{{ message.tags|default:'info' }}">
+                            {{ message }}
+                            <button class="toast-close" onclick="closeToast(this)">×</button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <section class="panel-card fade-up">
+                <div class="table-header">
+                    <h2>User Wallets</h2>
+                </div>
+
+                <div class="table-wrap">
+                    <table class="users-table">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Balance</th>
+                                <th>Adjust Coins</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for wallet in wallets %}
+                            <tr>
+                                <td>{{ wallet.user.username }}</td>
+                                <td>
+                                    <span class="badge badge-active">{{ wallet.balance }} coins</span>
+                                </td>
+                                <td>
+                                    <form method="post" action="{% url 'adjust_user_coins' wallet.user.id %}" class="coin-form">
+                                        {% csrf_token %}
+                                        <select name="action" class="filter-select coin-select">
+                                            <option value="credit">Add</option>
+                                            <option value="debit">Remove</option>
+                                        </select>
+
+                                        <input type="number" name="amount" min="1" placeholder="Amount" class="filter-input coin-input" required>
+
+                                        <input type="text" name="note" placeholder="Note (optional)" class="filter-input coin-note">
+
+                                        <button type="submit" class="btn btn-primary">Apply</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="empty-state">No wallets found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="panel-card fade-up delay-1">
+                <div class="table-header">
+                    <h2>Recent Transactions</h2>
+                </div>
+
+                <div class="table-wrap">
+                    <table class="users-table">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Type</th>
+                                <th>Amount</th>
+                                <th>Note</th>
+                                <th>By</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for tx in transactions %}
+                            <tr>
+                                <td>{{ tx.wallet.user.username }}</td>
+                                <td>
+                                    {% if tx.transaction_type == "credit" %}
+                                        <span class="badge badge-active">Credit</span>
+                                    {% else %}
+                                        <span class="badge badge-inactive">Debit</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ tx.amount }}</td>
+                                <td>{{ tx.note|default:"—" }}</td>
+                                <td>
+                                    {% if tx.created_by %}
+                                        {{ tx.created_by.username }}
+                                    {% else %}
+                                        —
+                                    {% endif %}
+                                </td>
+                                <td>{{ tx.created_at|date:"M d, Y H:i" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="empty-state">No transactions yet.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        function closeToast(button) {
+            const toast = button.parentElement;
+            toast.classList.add("toast-hide");
+            setTimeout(() => {
+                toast.remove();
+            }, 300);
+        }
+
+        setTimeout(() => {
+            document.querySelectorAll(".toast").forEach((toast) => {
+                toast.classList.add("toast-hide");
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            });
+        }, 3000);
+    </script>
+</body>
+</html>
