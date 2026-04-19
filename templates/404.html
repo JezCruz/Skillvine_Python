@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Skillvine</title>
+    <link rel="stylesheet" href="{% static 'css/404.css' %}">
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <a href="/">Skillvine</a>
+        </div>
+
+        <nav class="nav-links">
+            <a href="/#about">About</a>
+            <a href="/#services">Services</a>
+            <a href="/#contact">Contact</a>
+        </nav>
+
+        <div class="nav-actions">
+            <a href="/login/" class="login-btn">Login</a>
+        </div>
+    </header>
+
+    <main class="error-page">
+        <section class="error-card">
+            <p class="error-code">404</p>
+            <h1>Oops, this page got lost.</h1>
+            <p class="error-text">
+                The page you’re looking for doesn’t exist, was moved, or may have been typed incorrectly.
+                Let’s get you back to learning with Skillvine.
+            </p>
+
+            <div class="error-actions">
+                <a href="/" class="primary-btn">Back to Home</a>
+                <a href="/#contact" class="secondary-btn">Contact Us</a>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
