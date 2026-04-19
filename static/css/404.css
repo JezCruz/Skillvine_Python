@@ -13,53 +13,6 @@ body {
         linear-gradient(135deg, #33d6e0 0%, #c8eef0 100%);
 }
 
-.navbar {
-    width: 100%;
-    height: 72px;
-    background: #111111;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 24px;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-}
-
-.logo a {
-    color: white;
-    text-decoration: none;
-    font-size: 1.4rem;
-    font-weight: 700;
-}
-
-.nav-links {
-    display: flex;
-    gap: 28px;
-}
-
-.nav-links a {
-    color: white;
-    text-decoration: none;
-    font-size: 1rem;
-    transition: opacity 0.2s ease;
-}
-
-.nav-links a:hover {
-    opacity: 0.8;
-}
-
-.nav-actions .login-btn {
-    text-decoration: none;
-    background: #173ea8;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 999px;
-    font-weight: 700;
-    display: inline-block;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.18);
-}
-
 .error-page {
     min-height: calc(100vh - 72px);
     display: flex;
