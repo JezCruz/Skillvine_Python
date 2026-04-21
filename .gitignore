@@ -43,3 +43,11 @@ dist/
 
 # Node modules if ever used later
 node_modules/
+
+# Nvim sessions
+work.vim
+
+# Johval(linux arch btw) requirements
+requirements.txt
+requirements(backup).txt
+
