@@ -40,17 +40,11 @@ body.fade-out {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #ffffff;
+  background-color: #1a1a1a;
   padding: 10px 20px;
-  color: #1a1a1a;
+  color: #fff;
   position: relative;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
   z-index: 2000;
-}
-.logo a {
-  font-weight: bolder;
-  color: #1a1a1a;
-  text-decoration: none;
 }
 
 .nav-links {
@@ -60,7 +54,7 @@ body.fade-out {
 }
 
 .nav-links li a {
-  color: #1a1a1a;
+  color: white;
   text-decoration: none;
   transition: color 0.3s ease;
 }
@@ -192,26 +186,22 @@ body.fade-out {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 6px 16px;
+  padding: 6px 12px;
   border-radius: 999px;
   text-decoration: none;
   font-weight: 700;
   color: white;
-  background-color: #000000;
-  box-sizing: border-box;
-  box-shadow: 0 0px 0px rgba(255, 255, 255, 0.28);
+  background: linear-gradient(135deg, #052569, #12338ba2);
+  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.28);
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease,
-    background-color 0.2s ease,
     opacity 0.2s ease;
 }
 
 #nav-btn:hover {
   transform: translateY(-2px);
-  background-color: #ffffff;
-  color: #000000;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 14px 28px rgba(37, 99, 235, 0.35);
   opacity: 0.96;
 }
 
