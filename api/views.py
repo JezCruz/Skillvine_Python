@@ -17,6 +17,7 @@ def profile(request):
         "id": user.id,
         "username": user.username,
         "email": user.email,
+        "role": user.role,
     })
 
 from dashboard.models import Lesson, Booking
@@ -32,9 +33,14 @@ def create_booking(request):
     if not lesson_id:
         return Response({"error": "Lesson ID is required"}, status=400)
 
+    if request.user.role != 'student':
+        return Response({"error": "Only students can book lessons"}, status=403)
+
     lesson = get_object_or_404(Lesson, id=lesson_id)
 
-    # Optional: iwas duplicate booking
+    if lesson.teacher == request.user:
+        return Response({"error": "You cannot book your own lesson"}, status=400)
+
     if Booking.objects.filter(student=request.user, lesson=lesson).exists():
         return Response({"error": "You already booked this lesson"}, status=400)
 
@@ -45,7 +51,7 @@ def create_booking(request):
     )
 
     serializer = BookingSerializer(booking)
-    return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.data, status=201)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -53,6 +59,37 @@ def my_bookings(request):
     bookings = Booking.objects.filter(student=request.user).order_by('-created_at')
     serializer = BookingSerializer(bookings, many=True)
     return Response(serializer.data)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def teacher_bookings(request):
+    if request.user.role != 'teacher':
+        return Response({"error": "Only teachers allowed"}, status=403)
+
+    bookings = Booking.objects.filter(lesson__teacher=request.user)
+    serializer = BookingSerializer(bookings, many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def update_booking_status(request, id):
+    if request.user.role != 'teacher':
+        return Response({"error": "Only teachers can update booking status"}, status=403)
+
+    booking = get_object_or_404(Booking, id=id)
+
+    if booking.lesson.teacher != request.user:
+        return Response({"error": "Not allowed"}, status=403)
+
+    status_value = request.data.get('status')
+
+    if status_value not in ['approved', 'declined']:
+        return Response({"error": "Invalid status"}, status=400)
+
+    booking.status = status_value
+    booking.save()
+
+    return Response({"message": "Updated"})
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -85,6 +122,9 @@ def get_lessons(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_lesson(request):
+    if request.user.role != 'teacher':
+        return Response({"error": "Only teachers can create lessons"}, status=403)
+
     serializer = LessonSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save(teacher=request.user)
