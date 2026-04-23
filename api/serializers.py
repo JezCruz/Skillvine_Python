@@ -1,10 +1,17 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from dashboard.models import Lesson
+from dashboard.models import Lesson, Booking
 
 User = get_user_model()
 
 
+class BookingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Booking
+        fields = '__all__'
+        read_only_fields = ['student', 'status', 'created_at']
+
+        
 class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson

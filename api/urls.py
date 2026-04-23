@@ -8,6 +8,8 @@ from .views import (
     register_user,
     profile,
     my_lessons,
+    create_booking,
+    my_bookings,
 )
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
@@ -17,7 +19,10 @@ urlpatterns = [
     path('lessons/<int:id>/', get_lesson),
     path('lessons/<int:id>/update/', update_lesson),
     path('lessons/<int:id>/delete/', delete_lesson),
+    
     path('my-lessons/', my_lessons),
+    path('bookings/create/', create_booking),
+    path('my-bookings/', my_bookings),
 
     path('register/', register_user),
     path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),

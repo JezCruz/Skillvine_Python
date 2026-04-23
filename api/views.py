@@ -4,8 +4,8 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
-from dashboard.models import Lesson
-from .serializers import LessonSerializer, RegisterSerializer
+from dashboard.models import Lesson, Booking
+from .serializers import LessonSerializer, RegisterSerializer, BookingSerializer
 
 User = get_user_model()
 
@@ -18,6 +18,41 @@ def profile(request):
         "username": user.username,
         "email": user.email,
     })
+
+from dashboard.models import Lesson, Booking
+from .serializers import LessonSerializer, RegisterSerializer, BookingSerializer
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework import status
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_booking(request):
+    lesson_id = request.data.get('lesson')
+
+    if not lesson_id:
+        return Response({"error": "Lesson ID is required"}, status=400)
+
+    lesson = get_object_or_404(Lesson, id=lesson_id)
+
+    # Optional: iwas duplicate booking
+    if Booking.objects.filter(student=request.user, lesson=lesson).exists():
+        return Response({"error": "You already booked this lesson"}, status=400)
+
+    booking = Booking.objects.create(
+        student=request.user,
+        lesson=lesson,
+        status='pending'
+    )
+
+    serializer = BookingSerializer(booking)
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def my_bookings(request):
+    bookings = Booking.objects.filter(student=request.user).order_by('-created_at')
+    serializer = BookingSerializer(bookings, many=True)
+    return Response(serializer.data)
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
