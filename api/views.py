@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
@@ -7,12 +8,14 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
 from dashboard.models import Lesson, Booking, Wallet, CoinTransaction, Enrollment
-from .serializers import LessonSerializer, RegisterSerializer, BookingSerializer
+from .serializers import LessonSerializer, RegisterSerializer, BookingSerializer, EmailOrUsernameTokenObtainPairSerializer
 
 
 User = get_user_model()
 
-
+class EmailOrUsernameLoginView(TokenObtainPairView):
+    serializer_class = EmailOrUsernameTokenObtainPairSerializer
+    
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def profile(request):

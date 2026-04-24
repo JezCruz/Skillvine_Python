@@ -1,11 +1,27 @@
 from rest_framework import serializers
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, authenticate
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from dashboard.models import Lesson, Booking
 
 
 User = get_user_model()
 
+
+class EmailOrUsernameTokenObtainPairSerializer(TokenObtainPairSerializer):
+    username_field = 'username'
+
+    def validate(self, attrs):
+        login = attrs.get("username")
+        password = attrs.get("password")
+
+        user_obj = User.objects.filter(email__iexact=login).first()
+
+        if user_obj:
+            attrs["username"] = user_obj.username
+
+        return super().validate(attrs)
+    
 
 class LessonSerializer(serializers.ModelSerializer):
     teacher_id = serializers.IntegerField(source='teacher.id', read_only=True)
@@ -64,12 +80,26 @@ class BookingSerializer(serializers.ModelSerializer):
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
     password2 = serializers.CharField(write_only=True)
-    role = serializers.ChoiceField(choices=User.ROLE_CHOICES, default='student')
+    role = serializers.ChoiceField(choices=User.ROLE_CHOICES)
 
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'role', 'password', 'password2']
         read_only_fields = ['id']
+
+    def validate_username(self, value):
+        if User.objects.filter(username__iexact=value).exists():
+            raise serializers.ValidationError("Username already exists.")
+        return value
+
+    def validate_email(self, value):
+        if not value:
+            raise serializers.ValidationError("Email is required.")
+
+        if User.objects.filter(email__iexact=value).exists():
+            raise serializers.ValidationError("Email already exists.")
+
+        return value
 
     def validate(self, attrs):
         if attrs['password'] != attrs['password2']:
@@ -81,9 +111,9 @@ class RegisterSerializer(serializers.ModelSerializer):
 
         user = User.objects.create_user(
             username=validated_data['username'],
-            email=validated_data.get('email', ''),
+            email=validated_data['email'],
             password=validated_data['password'],
-            role=validated_data.get('role', 'student'),
+            role=validated_data['role'],
         )
 
         return user
