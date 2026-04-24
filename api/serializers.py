@@ -34,6 +34,7 @@ class BookingSerializer(serializers.ModelSerializer):
     lesson_id = serializers.IntegerField(source='lesson.id', read_only=True)
     lesson_title = serializers.CharField(source='lesson.title', read_only=True)
     lesson_price = serializers.IntegerField(source='lesson.price_coins', read_only=True)
+    teacher_username = serializers.CharField(source='lesson.teacher.username', read_only=True)
 
     class Meta:
         model = Booking
@@ -41,10 +42,10 @@ class BookingSerializer(serializers.ModelSerializer):
             'id',
             'student_id',
             'student_username',
-            'lesson',
             'lesson_id',
             'lesson_title',
             'lesson_price',
+            'teacher_username',
             'status',
             'created_at',
         ]
