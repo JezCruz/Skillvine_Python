@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
-from dashboard.models import Lesson, Booking
+from dashboard.models import Lesson, Booking, Wallet, CoinTransaction, Enrollment
 from .serializers import LessonSerializer, RegisterSerializer, BookingSerializer
 
 
@@ -177,10 +177,48 @@ def update_booking_status(request, id):
     if booking.lesson.teacher != request.user:
         return Response({"error": "Not allowed"}, status=status.HTTP_403_FORBIDDEN)
 
+    if booking.status != 'pending':
+        return Response({"error": "This booking is already processed"}, status=status.HTTP_400_BAD_REQUEST)
+
     status_value = request.data.get('status')
 
     if status_value not in ['approved', 'declined']:
         return Response({"error": "Invalid status"}, status=status.HTTP_400_BAD_REQUEST)
+
+    if status_value == 'approved':
+        student_wallet = get_object_or_404(Wallet, user=booking.student)
+        teacher_wallet = get_object_or_404(Wallet, user=booking.lesson.teacher)
+
+        price = booking.lesson.price_coins
+
+        if student_wallet.balance < price:
+            return Response({"error": "Student has insufficient coins"}, status=status.HTTP_400_BAD_REQUEST)
+
+        student_wallet.balance -= price
+        student_wallet.save()
+
+        teacher_wallet.balance += price
+        teacher_wallet.save()
+
+        CoinTransaction.objects.create(
+            user=booking.student,
+            transaction_type='debit',
+            amount=price,
+            description=f"Booked lesson: {booking.lesson.title}"
+        )
+
+        CoinTransaction.objects.create(
+            user=booking.lesson.teacher,
+            transaction_type='credit',
+            amount=price,
+            description=f"Payment received for lesson: {booking.lesson.title}"
+        )
+
+        Enrollment.objects.get_or_create(
+            student=booking.student,
+            lesson=booking.lesson,
+            defaults={"status": "enrolled"}
+        )
 
     booking.status = status_value
     booking.save()
