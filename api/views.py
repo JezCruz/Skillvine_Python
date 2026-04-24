@@ -17,12 +17,14 @@ User = get_user_model()
 @permission_classes([IsAuthenticated])
 def profile(request):
     user = request.user
+    wallet = getattr(user, "wallet", None)
 
     return Response({
         "id": user.id,
         "username": user.username,
         "email": user.email,
         "role": user.role,
+        "coins": wallet.balance if wallet else 0,
     })
 
 
