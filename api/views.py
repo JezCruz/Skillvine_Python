@@ -229,3 +229,26 @@ def update_booking_status(request, id):
         "message": f"Booking {status_value} successfully",
         "status": booking.status,
     })
+
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def my_enrollments(request):
+    if request.user.role != 'student':
+        return Response({"error": "Only students can view enrollments"}, status=status.HTTP_403_FORBIDDEN)
+
+    enrollments = Enrollment.objects.filter(student=request.user).order_by('-created_at')
+
+    data = []
+    for enrollment in enrollments:
+        data.append({
+            "id": enrollment.id,
+            "lesson_id": enrollment.lesson.id,
+            "lesson_title": enrollment.lesson.title,
+            "teacher_username": enrollment.lesson.teacher.username,
+            "status": enrollment.status,
+            "created_at": enrollment.created_at,
+        })
+
+    return Response(data)
