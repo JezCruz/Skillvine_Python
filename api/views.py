@@ -10,6 +10,9 @@ from rest_framework.response import Response
 from dashboard.models import Lesson, Booking, Wallet, CoinTransaction, Enrollment
 from .serializers import LessonSerializer, RegisterSerializer, BookingSerializer, EmailOrUsernameTokenObtainPairSerializer
 
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
+
 
 User = get_user_model()
 
@@ -227,6 +230,23 @@ def update_booking_status(request, id):
 
     booking.status = status_value
     booking.save()
+
+    channel_layer = get_channel_layer()
+    student_group = f"user_{booking.student.id}_notifications"
+
+    async_to_sync(channel_layer.group_send)(
+        student_group,
+        {
+            "type": "send_notification",
+            "message": f'Your booking for "{booking.lesson.title}" was {status_value}.',
+            "data": {
+                "booking_id": booking.id,
+                "lesson_id": booking.lesson.id,
+                "lesson_title": booking.lesson.title,
+                "status": booking.status,
+            },
+        }
+    )
 
     return Response({
         "message": f"Booking {status_value} successfully",
