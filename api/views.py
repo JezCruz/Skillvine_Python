@@ -280,3 +280,20 @@ def update_profile(request):
         "email": user.email,
         "role": user.role,
     })
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_lesson(request):
+    user = request.user
+
+    if user.role != 'teacher':
+        return Response({"error": "Only teachers can create lessons"}, status=403)
+
+    serializer = LessonSerializer(data=request.data)
+
+    if serializer.is_valid():
+        serializer.save(teacher=user)
+        return Response(serializer.data, status=201)
+
+    return Response(serializer.errors, status=400)

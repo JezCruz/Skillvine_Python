@@ -38,4 +38,5 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('profile/', profile),
     path('profile/update/', update_profile),
+    path('lessons/create/', create_lesson),
 ]
