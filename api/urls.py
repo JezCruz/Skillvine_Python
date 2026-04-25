@@ -13,6 +13,7 @@ from .views import (
     teacher_bookings,
     update_booking_status,
     my_enrollments,
+    update_profile,
 )
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from .views import EmailOrUsernameLoginView
@@ -36,4 +37,5 @@ urlpatterns = [
     path('login/', EmailOrUsernameLoginView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('profile/', profile),
+    path('profile/update/', update_profile),
 ]

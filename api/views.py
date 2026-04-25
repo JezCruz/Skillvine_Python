@@ -255,3 +255,28 @@ def my_enrollments(request):
         })
 
     return Response(data)
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_profile(request):
+    user = request.user
+
+    username = request.data.get("username")
+    email = request.data.get("email")
+
+    if username:
+        user.username = username
+
+    if email:
+        user.email = email
+
+    user.save()
+
+    return Response({
+        "message": "Profile updated successfully",
+        "id": user.id,
+        "username": user.username,
+        "email": user.email,
+        "role": user.role,
+    })
