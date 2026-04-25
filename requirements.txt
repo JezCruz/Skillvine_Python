@@ -12,6 +12,8 @@ Brotli==1.1.0
 cachetools==6.2.4
 certifi==2025.8.3
 cffi==2.0.0
+channels==4.3.2
+channels_redis==4.3.0
 charset-normalizer==3.4.3
 click==8.3.1
 cloudscraper==1.2.71
@@ -44,6 +46,7 @@ markdown-it-py==4.0.0
 MarkupSafe==3.0.3
 mdurl==0.1.2
 mmh3==5.2.0
+msgpack==1.1.2
 multidict==6.6.4
 networkx==3.5
 numpy==2.3.3
@@ -76,6 +79,7 @@ pyttsx3==2.99
 pytz==2025.2
 pywin32==311
 realtime==2.27.1
+redis==7.4.0
 requests==2.32.5
 requests-toolbelt==1.0.0
 rich==14.2.0
