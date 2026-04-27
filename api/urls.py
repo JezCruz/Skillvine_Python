@@ -14,11 +14,14 @@ from .views import (
     update_booking_status,
     my_enrollments,
     update_profile,
+    EmailOrUsernameLoginView,
+    app_version,
 )
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from .views import EmailOrUsernameLoginView
+
 
 urlpatterns = [
+    path("app-version/", app_version),
     path('lessons/', get_lessons),
     path('lessons/create/', create_lesson),
     path('lessons/<int:id>/', get_lesson),
