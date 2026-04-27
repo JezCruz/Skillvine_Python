@@ -18,6 +18,20 @@ User = get_user_model()
 
 class EmailOrUsernameLoginView(TokenObtainPairView):
     serializer_class = EmailOrUsernameTokenObtainPairSerializer
+
+
+@api_view(["GET"])
+def app_version(request):
+    return Response({
+        "latest_version": "1.0.1",
+        "apk_url": "http://skillvines.com/static/apk/skillvine-v1.0.1.apk",
+        "notes": [
+            "Added auto-refresh",
+            "Fixed production API connection",
+            "Improved app update system"
+        ]
+    })
+
     
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
