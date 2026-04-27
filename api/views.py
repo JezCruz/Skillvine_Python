@@ -20,15 +20,16 @@ class EmailOrUsernameLoginView(TokenObtainPairView):
     serializer_class = EmailOrUsernameTokenObtainPairSerializer
 
 
-@api_view(["GET"])
+@api_view(['GET'])
 def app_version(request):
     return Response({
-        "latest_version": "1.0.1",
-        "apk_url": "http://skillvines.com/downloads/apk/skillvine-v1.0.1.apk",
+        "latest_version": "1.0.2",
+        "apk_url": "http://skillvines.com/downloads/apk/skillvine-v1.0.2.apk",
         "force_update": False,
         "notes": [
-            "Added auto-refresh",
-            "Added in-app update checker"
+            "Added update system",
+            "Improved UI",
+            "Bug fixes"
         ]
     })
 
