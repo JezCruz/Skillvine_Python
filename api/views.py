@@ -24,11 +24,11 @@ class EmailOrUsernameLoginView(TokenObtainPairView):
 def app_version(request):
     return Response({
         "latest_version": "1.0.1",
-        "apk_url": "http://skillvines.com/static/apk/skillvine-v1.0.1.apk",
+        "apk_url": "http://skillvines.com/downloads/apk/skillvine-v1.0.1.apk",
+        "force_update": False,
         "notes": [
             "Added auto-refresh",
-            "Fixed production API connection",
-            "Improved app update system"
+            "Added in-app update checker"
         ]
     })
 
