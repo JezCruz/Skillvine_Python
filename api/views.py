@@ -8,7 +8,8 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
 from dashboard.models import Lesson, Booking, Wallet, CoinTransaction, Enrollment
-from .serializers import LessonSerializer, RegisterSerializer, BookingSerializer, EmailOrUsernameTokenObtainPairSerializer
+from .serializers import LessonSerializer, RegisterSerializer, BookingSerializer, EmailOrUsernameTokenObtainPairSerializer, NotificationSerializer
+from .models import Notification
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
@@ -162,6 +163,14 @@ def create_booking(request):
         lesson=lesson,
         status='pending'
     )
+
+    Notification.objects.create(
+        user=lesson.teacher,
+        title="New Booking Request",
+
+        message=f"{request.user.username} booked your lesson: {lesson.title}"
+    )
+
 
     serializer = BookingSerializer(booking)
     return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -332,3 +341,28 @@ def create_lesson(request):
         return Response(serializer.data, status=201)
 
     return Response(serializer.errors, status=400)
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def my_notifications(request):
+    notifications = Notification.objects.filter(
+        user=request.user
+    ).order_by("-created_at")
+
+    serializer = NotificationSerializer(notifications, many=True)
+    return Response(serializer.data)
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def mark_notification_read(request, id):
+    try:
+        notification = Notification.objects.get(id=id, user=request.user)
+    except Notification.DoesNotExist:
+        return Response({"error": "Notification not found"}, status=404)
+
+    notification.is_read = True
+    notification.save()
+
+    return Response({"message": "Notification marked as read"})

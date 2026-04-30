@@ -16,6 +16,8 @@ from .views import (
     update_profile,
     EmailOrUsernameLoginView,
     app_version,
+    my_notifications,
+    mark_notification_read
 )
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
@@ -32,6 +34,8 @@ urlpatterns = [
     path('bookings/create/', create_booking),
     path('my-bookings/', my_bookings),
     path('my-enrollments/', my_enrollments),
+    path("notifications/", my_notifications),
+    path("notifications/<int:id>/read/", mark_notification_read),
 
     path('teacher-bookings/', teacher_bookings),
     path('booking/<int:id>/update/', update_booking_status),

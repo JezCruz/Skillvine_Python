@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model, authenticate
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from dashboard.models import Lesson, Booking
-
+from .models import Notification
 
 User = get_user_model()
 
@@ -117,3 +117,9 @@ class RegisterSerializer(serializers.ModelSerializer):
         )
 
         return user
+    
+
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notification
+        fields = ["id", "title", "message", "is_read", "created_at"]
