@@ -85,6 +85,38 @@
   </div>
 </section>
 
+<section class="app-showcase">
+  <div class="showcase-header">
+    <span>Skillvine Mobile App</span>
+    <h2>Explore the Skillvine Experience</h2>
+
+    <p class="subtitle">
+      Preview the app screens with smooth auto-sliding animation.
+    </p>
+
+    <p class="credit">
+      Crafted by 
+      <a href="https://github.com/JezCruz" target="_blank">JezCruz</a>
+    </p>
+  </div>
+
+  <div class="app-carousel">
+    <div class="app-track">
+      {% for i in "12345678" %}
+      <div class="app-phone">
+        <img src="{% static 'images/app-img/0'|add:i|add:'.jpg' %}" alt="Skillvine App Screen {{ i }}">
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="app-download">
+  <a href="/downloads/apk/skillvine-v1.0.4.apk" class="download-btn">
+    Download App
+    <span class="version">v1.0.4</span>
+  </a>
+</div>
+</section>
+
 <section class="features" id="features">
   <div class="signup">
     <a class="text-signup" href="/signup">Sign Up Now</a>
