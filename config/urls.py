@@ -17,8 +17,27 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from django.http import FileResponse, Http404
+from pathlib import Path
+from django.conf import settings
+
+def download_apk(request, filename):
+    file_path = Path(settings.BASE_DIR) / "downloads" / "apk" / filename
+
+    if not file_path.exists():
+        raise Http404("APK not found")
+
+    return FileResponse(
+        open(file_path, "rb"),
+        as_attachment=True,
+        filename=filename
+    )
+
 urlpatterns = [
     path("admin/", admin.site.urls),
+
+    path("downloads/apk/<str:filename>", download_apk),
+
     path("", include("core.urls")),
     path("", include("users.urls")),
     path("", include("dashboard.urls")),
